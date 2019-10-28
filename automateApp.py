@@ -1,6 +1,7 @@
 import subprocess, sys
 import pyautogui
 import pyperclip
+import time
 
 # powershellVirtualAndroidScript = "F:\\memu\\runemucMultipleTimes.ps1"
 # subprocess.Popen(["powershell", powershellVirtualAndroidScript])
@@ -10,9 +11,9 @@ screenWidth, screenHeight    = pyautogui.size()
 currentMouseX, currentMouseY = pyautogui.position()
 # pyautogui.moveTo(450, 450, duration=1.0)
 num = 0
-while num < 100 :
-    print(pyautogui.position)
-    tmp_var = input()
+while ( num < 100 ):
+    print ("To jest pozycja kursora {0}".format(pyautogui.position))
+    time.sleep(2)
     num = num + 1
 
 # pyautogui.click()
