@@ -11,8 +11,10 @@ screenWidth, screenHeight    = pyautogui.size()
 currentMouseX, currentMouseY = pyautogui.position()
 # pyautogui.moveTo(450, 450, duration=1.0)
 num = 0
+# mogę sobie nagrać pozycje gdzie klikałem a potem te liczby wykorzystać przy programowaniu, czyli plik ini ?
 while ( num < 100 ):
-    print ("To jest pozycja kursora {0}".format(pyautogui.position))
+    
+    print ("To jest pozycja kursora x->{} i y-> {}".format(*pyautogui.position()))
     time.sleep(2)
     num = num + 1
 
