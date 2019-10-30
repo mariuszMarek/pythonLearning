@@ -3,7 +3,9 @@ import pyautogui
 import pyperclip
 import time
 import pynput
+from cmdInterface import prep_cmd # tak sie importuje funkcje z innych plików
 
+prep_cmd()
 # powershellVirtualAndroidScript = "F:\\memu\\runemucMultipleTimes.ps1"
 # subprocess.Popen(["powershell", powershellVirtualAndroidScript])
 #will run pythong from ps1 script
