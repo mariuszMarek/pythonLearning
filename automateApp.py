@@ -2,6 +2,7 @@ import subprocess, sys
 import pyautogui
 import pyperclip
 import time
+import pynput
 
 # powershellVirtualAndroidScript = "F:\\memu\\runemucMultipleTimes.ps1"
 # subprocess.Popen(["powershell", powershellVirtualAndroidScript])
