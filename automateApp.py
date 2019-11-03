@@ -3,13 +3,11 @@ import pyautogui
 import pyperclip
 import time
 import pynput
-
+from ManagaSettings import ManageSettings
 from cmdInterface import prep_cmd # tak sie importuje funkcje z innych plików
 from mouse_keybord_events import mouse_events
 
-prep_cmd()
-positions_of_mouse = []
-mouse_events(positions_of_mouse)
+
 # powershellVirtualAndroidScript = "F:\\memu\\runemucMultipleTimes.ps1"
 # subprocess.Popen(["powershell", powershellVirtualAndroidScript])
 #will run pythong from ps1 script
