@@ -5,9 +5,11 @@ import time
 import pynput
 
 from cmdInterface import prep_cmd # tak sie importuje funkcje z innych plików
+from mouse_keybord_events import mouse_events
 
 prep_cmd()
-
+positions_of_mouse = []
+mouse_events(positions_of_mouse)
 # powershellVirtualAndroidScript = "F:\\memu\\runemucMultipleTimes.ps1"
 # subprocess.Popen(["powershell", powershellVirtualAndroidScript])
 #will run pythong from ps1 script
@@ -19,7 +21,7 @@ num = 0
 # mogę sobie nagrać pozycje gdzie klikałem a potem te liczby wykorzystać przy programowaniu, czyli plik ini ?
 while ( num < 100 ):
     
-    print ("To jest pozycja kursora x->{} i y-> {}".format(*pyautogui.position()))
+    # print ("To jest pozycja kursora x->{} i y-> {}".format(*pyautogui.position())) # nie aktualne 
     time.sleep(2)
     num = num + 1
 
