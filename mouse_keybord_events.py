@@ -1,21 +1,34 @@
+from pynput.keyboard import Listener as KeyboardListener
+from pynput.mouse import Listener as MouseListener
 from pynput import mouse
 from pynput import keyboard
 
 
-def mouse_events(position_list = []):
-    def on_click(x, y, button, pressed):
-        # print('{0} at {1}'.format( 'Pressed' if pressed else 'Released', (x, y) ) )
-        if pressed : position_list.append(tuple((x, y)))
+class MouseEvents: #mozliwosc rozbudowy i zrobienia tego bardziej robust/generalnym
+    def __init__(self, position_list = []):
+        self.position_list = position_list
+        self.start_recording()
+    def on_click(self,x, y, button, pressed):
+        print('{0} at {1}'.format( 'Pressed' if pressed else 'Released', (x, y) ) )
+        if pressed : self.position_list.append(tuple((x, y)))
     
-    def on_release(key):
+    def on_release(self, key):
         if key == keyboard.Key.esc:
             print('{0} released, stipping recording'.format( key ) )
-            listener1.stop()
-            listener2.stop()
-            return False
-            
-    # in a non-blocking fashion:
-    listener1 = mouse.Listener   ( on_click=on_click )    
-    listener2 = keyboard.Listener( on_release=on_release )
-    listener1.start()
-    listener2.start()
+            return False        
+    def start_recording(self):
+        with MouseListener(on_click=self.on_click) as listener:
+            with KeyboardListener(on_release=self.on_release) as listener:
+                listener.join()
+
+#a simple "unit" test
+# test = MouseEvents([])
+
+        
+    
+
+        
+    
+                
+
+
