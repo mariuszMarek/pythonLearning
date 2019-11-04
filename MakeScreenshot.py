@@ -5,6 +5,7 @@ class MakeScreenshot:
     def __init__(self, XYpos_list):
         self.XYpos_list = XYpos_list
         self.imageGrab = PIL.ImageGrab
+        self
 
     def make_screensots(self):
         for idx, XYpos in enumerate(self.XYpos_list):
