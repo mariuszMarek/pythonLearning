@@ -9,7 +9,7 @@ class ManageSettings:
         self.autogui       = pyautogui
         self.checkinput    = pynput
         self.ini_path      = ".\\position_settings.ini" # sciezka gdzie bedzie zapisany plik z ustawieniami, ciekawe czy tak mozna        
-        self.position_list = []
+        self.__position_list = []
     def save_or_load (self):
             if(self.to_record):            
                 MouseEvents(self.position_list)
@@ -36,8 +36,8 @@ class ManageSettings:
 # simple unit test
 # testKlas = ManageSettings(False)
 # testKlas.save_or_load()
-# # for posXY in testKlas.position_list:
-# #     print("pozycja x->{} y->{}".format(posXY[0],posXY[1]), end="\n")
+# for posXY in testKlas.position_list:
+#     print("pozycja x->{} y->{}".format(posXY[0],posXY[1]), end="\n")
     
 
 

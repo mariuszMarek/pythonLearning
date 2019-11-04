@@ -11,10 +11,10 @@ prep_cmd() # check for commands
 
 # powershellVirtualAndroidScript = "F:\\memu\\runemucMultipleTimes.ps1"
 # subprocess.Popen(["powershell", powershellVirtualAndroidScript])
-#will run pythong from ps1 script
+# bede uruchamial proces po procesie
 
-screenWidth, screenHeight    = pyautogui.size()
-currentMouseX, currentMouseY = pyautogui.position()
+prep_cmd()
+
 # pyautogui.moveTo(450, 450, duration=1.0)
 num = 0
 # mogę sobie nagrać pozycje gdzie klikałem a potem te liczby wykorzystać przy programowaniu, czyli plik ini ?

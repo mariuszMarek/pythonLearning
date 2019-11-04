@@ -1,28 +1,31 @@
 import PIL
-
+import os
 
 class MakeScreenshot:
-    def __init__(self, XYpos_list):
+    def __init__(self, XYpos_list, EXPAND_VALUE):
         self.XYpos_list = XYpos_list
         self.imageGrab = PIL.ImageGrab
-
+        self.__file_list = []
+        self.__EXPAND_VALUE = EXPAND_VALUE
     def make_screensots(self):
+        dirImages = ".\\images"
+        if not os.path.exists(dirImages):
+            os.mkdir(dirImages)
         for idx, XYpos in enumerate(self.XYpos_list):
-            pos_x = XYpos[0]
-            pos_y = XYpos[1]
-            my_bbox = self.make_bbox(pos_x, pos_y)
-            print(pos_x, pos_y, my_bbox)
+            pos_x      = XYpos[0]
+            pos_y      = XYpos[1]
+            my_bbox    = self.make_bbox(pos_x, pos_y)            
             temp_image = self.imageGrab.grab(
-                bbox=(my_bbox[0], my_bbox[1], my_bbox[2], my_bbox[3]))
-            temp_name = ".\\{}_{}_{}_{}_{}_screenshot.tiff".format(
+                bbox=( my_bbox[0], my_bbox[1], my_bbox[2], my_bbox[3] ))
+            temp_name = ".\\{}\\{}_{}_{}_{}_{}_screenshot.tiff".format(dirImages,
                 idx, my_bbox[0], my_bbox[1], my_bbox[2], my_bbox[3])
             temp_image.save(temp_name)
-
+            self.__file_list.append(temp_name)
     def make_bbox(self, pos_x=0, pos_y=0):
         pos_x1 = pos_x2 = pos_x
         pos_y1 = pos_y2 = pos_y
-        con_num = "0"
-        EXPAND_VALUE  = 150
+        con_num       = "0" # for debuging
+        EXPAND_VALUE  = self.__EXPAND_VALUE
         MIN_X = MIN_Y = 0
         MAX_X         = 1920
         MAX_Y         = 1080
@@ -35,8 +38,6 @@ class MakeScreenshot:
         elif (pos_x <= (MIN_X+EXPAND_VALUE) and pos_y >= (MAX_Y-EXPAND_VALUE)):
             pos_x2 = pos_x + EXPAND_VALUE
             pos_y1 = pos_y - EXPAND_VALUE
-            # pos_x1 = pos_x
-            # pos_y2 = pos_y
             con_num += ";2"
         # upper left corner
         elif (pos_x <= (MIN_X+EXPAND_VALUE) and pos_y <= (MIN_Y+EXPAND_VALUE)):
