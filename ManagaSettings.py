@@ -2,7 +2,6 @@ import pyautogui
 import pynput
 import PIL
 from mouse_keybord_events import MouseEvents
-from MakeScreenshot import MakeScreenshot
 
 class ManageSettings:    
     def __init__(self, record_or_not = False):
@@ -35,12 +34,10 @@ class ManageSettings:
 
     
 # simple unit test
-testKlas = ManageSettings(False)
-testKlas.save_or_load()
-for posXY in testKlas.position_list:
-    print("pozycja x->{} y->{}".format(posXY[0],posXY[1]), end="\n")
-testKlasy2 = MakeScreenshot(testKlas.position_list)
-testKlasy2.make_screensots()
+# testKlas = ManageSettings(False)
+# testKlas.save_or_load()
+# # for posXY in testKlas.position_list:
+# #     print("pozycja x->{} y->{}".format(posXY[0],posXY[1]), end="\n")
     
 
 
