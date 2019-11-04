@@ -5,7 +5,6 @@ import time
 import pynput
 from ManagaSettings import ManageSettings
 from cmdInterface import prep_cmd # tak sie importuje funkcje z innych plików
-from mouse_keybord_events import mouse_events
 
 
 # powershellVirtualAndroidScript = "F:\\memu\\runemucMultipleTimes.ps1"
