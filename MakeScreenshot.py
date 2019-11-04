@@ -30,9 +30,7 @@ class MakeScreenshot:
         if (pos_x >= (MAX_X-EXPAND_VALUE) and pos_y >= (MAX_Y-EXPAND_VALUE)):
             pos_x1 = MAX_X - EXPAND_VALUE
             pos_y1 = MAX_Y - EXPAND_VALUE
-            con_num += ";1"
-            # pos_x2 = pos_x
-            # pos_y2 = pos_y
+            con_num += ";1"            
         # bottom left corner
         elif (pos_x <= (MIN_X+EXPAND_VALUE) and pos_y >= (MAX_Y-EXPAND_VALUE)):
             pos_x2 = pos_x + EXPAND_VALUE
@@ -89,8 +87,3 @@ class MakeScreenshot:
                 pos_y2 = pos_y + EXPAND_VALUE
                 con_num += ";10"
         return (pos_x1, pos_y1, pos_x2, pos_y2, con_num)
-    # def make_screensots(self):
-    #     # tutaj zrobic screenshoty do tego ? to juz moze oddzielna klasa/funkcja
-    #     pass
-    #     for position_
-    #     # PIL.ImageGrab.grab
