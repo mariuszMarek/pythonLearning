@@ -14,7 +14,8 @@ class MakeScreenshot:
             print(pos_x, pos_y, my_bbox)
             temp_image = self.imageGrab.grab(
                 bbox=(my_bbox[0], my_bbox[1], my_bbox[2], my_bbox[3]))
-            temp_name = ".\\{}_screenshot.jpg".format(idx)
+            temp_name = ".\\{}_{}_{}_{}_{}_screenshot.jpg".format(
+                idx, my_bbox[0], my_bbox[1], my_bbox[2], my_bbox[3])
             temp_image.save(temp_name)
 
     def make_bbox(self, pos_x=0, pos_y=0):
@@ -33,19 +34,26 @@ class MakeScreenshot:
             pos_x1 -= EXPAND_VALUE
             pos_x2 = pos_x
             pos_y2 = pos_y
-        # upper left corner
-        if(pos_x == MIN_X and pos_y == MIN_Y):
-            pos_x2 += EXPAND_VALUE
-            pos_y2 += EXPAND_VALUE
         # bottom left corner
-        # if(pos_x == MIN_X and pos_y >= (MAX_X-EXPAND_VALUE)):
-        #     pos_x2 += EXPAND_VALUE
+        if (pos_x <= (MIN_X+EXPAND_VALUE) and pos_y >= (MAX_Y-EXPAND_VALUE)):
+            pos_y1 = pos_y
+            pos_x1 = pos_x
+            pos_x2 = pos_x + EXPAND_VALUE
+            pos_y2 = pos_y - EXPAND_VALUE
+        # upper left corner
+        if (pos_x <= (MIN_X+EXPAND_VALUE) and pos_y <= (MIN_Y+EXPAND_VALUE)):
+            pos_y1 = MIN_Y
+            pos_x1 = MIN_X
+            pos_x2 = pos_x + EXPAND_VALUE
+            pos_y2 = pos_y + EXPAND_VALUE
 
         #bottom edge
         if (pos_y >= (MAX_Y-EXPAND_VALUE)): 
             if(pos_y >= MAX_Y):
                 pos_y2 = MAX_Y
+                pos_y1 = MAX_Y - EXPAND_VALUE
             else:
+                pos_y1 = pos_y - EXPAND_VALUE
                 pos_y2 = pos_y + (MAX_Y-pos_y)
         # right edge
         if (pos_x >= (MAX_X-EXPAND_VALUE)):
