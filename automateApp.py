@@ -3,9 +3,11 @@ import pyautogui
 import pyperclip
 import time
 import pynput
-from ManagaSettings import ManageSettings
-from cmdInterface import prep_cmd # tak sie importuje funkcje z innych plików
 
+from ManagaSettings import ManageSettings
+from MakeScreenshot import MakeScreenshot
+from cmdInterface import prep_cmd
+prep_cmd() # check for commands
 
 # powershellVirtualAndroidScript = "F:\\memu\\runemucMultipleTimes.ps1"
 # subprocess.Popen(["powershell", powershellVirtualAndroidScript])
