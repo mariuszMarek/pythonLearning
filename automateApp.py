@@ -7,22 +7,22 @@ import pynput
 from ManagaSettings import ManageSettings
 from MakeScreenshot import MakeScreenshot
 from cmdInterface import prep_cmd
-prep_cmd() # check for commands
+
 
 # powershellVirtualAndroidScript = "F:\\memu\\runemucMultipleTimes.ps1"
 # subprocess.Popen(["powershell", powershellVirtualAndroidScript])
 # bede uruchamial proces po procesie
-
+SCREENSHOT_SIZE = 200
 prep_cmd()
+ListOfSteps = ManageSettings()
+ListOfSteps.save_or_load()
+ScreenShot = MakeScreenshot(ListOfSteps.position_list, SCREENSHOT_SIZE)
+# kolejny krok to analiza zdjec
+
+# for steps in ListOfSteps.position_list:
+#     print ("step -> {}".format(steps))
 
 # pyautogui.moveTo(450, 450, duration=1.0)
-num = 0
-# mogę sobie nagrać pozycje gdzie klikałem a potem te liczby wykorzystać przy programowaniu, czyli plik ini ?
-while ( num < 100 ):
-    
-    # print ("To jest pozycja kursora x->{} i y-> {}".format(*pyautogui.position())) # nie aktualne 
-    time.sleep(2)
-    num = num + 1
 
 # pyautogui.click()
 # pyautogui.moveRel(None, 10)  # move mouse 10 pixels down
