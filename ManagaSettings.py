@@ -1,7 +1,7 @@
 import pyautogui
 import pynput
 import PIL
-from mouse_keybord_events import mouse_events
+from mouse_keybord_events import MouseEvents
 
 
 class ManageSettings:    
@@ -9,25 +9,36 @@ class ManageSettings:
         self.to_record     = record_or_not
         self.autogui       = pyautogui
         self.checkinput    = pynput
-        self.ini_path      = ".\\position_settings.ini" # sciezka gdzie bedzie zapisany plik z ustawieniami        
+        self.ini_path      = ".\\position_settings.ini" # sciezka gdzie bedzie zapisany plik z ustawieniami, ciekawe czy tak mozna        
         self.position_list = []
     def save_or_load (self):
             if(self.to_record):            
-                positions_of_mouse = []
-                mouse_events(positions_of_mouse)
-                print("test")
-                # jeżeli bedzie klik to zapisac miejsce w którym to zostalo to zapisane
-                # generalnie bedzie to nadpisywanie, kolejnym krokiem moze byc dodanie nazwy w parametrach by zapisywac pod konkretną aplikację ?
+                MouseEvents(self.position_list)
+                if self.position_list: self.save_settings()                               
             else:
-                print("D")
-                # tutaj będzie odbywał się odczyt zawartości pliku, jak czysty string bez żadnych konwersji
+                self.load_settings()                
     def save_settings(self):
+        with open(self.ini_path, 'w') as file_settings:
+            for posXY in self.position_list:
+                file_settings.write("{};{}".fo  rmat( posXY[0], posXY[1] ))        
         pass
+    def load_settings(self):
+        #tutaj trzeba odczytac utawienia
+        pass
+    @property
+    def position_list(self):
+        return self.position_list
     def make_screensots(self):    
+        # tutaj zrobic screenshoty do tego ? to juz moze oddzielna klasa/funkcja
         pass
         # for position_
         # PIL.ImageGrab.grab
-
-testKlas = ManageSettings(True)
+    
+#simple unit test
+# testKlas = ManageSettings(True)
+# testKlas.save_or_load()
+# for posXY in testKlas.position_list:
+#     print("pozycja x->{} y->{}".format(posXY[0],posXY[1]))
+    
 
 

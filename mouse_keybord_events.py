@@ -9,7 +9,7 @@ class MouseEvents: #mozliwosc rozbudowy i zrobienia tego bardziej robust/general
         self.position_list = position_list
         self.start_recording()
     def on_click(self,x, y, button, pressed):
-        print('{0} at {1}'.format( 'Pressed' if pressed else 'Released', (x, y) ) )
+        # print('{0} at {1}'.format( 'Pressed' if pressed else 'Released', (x, y) ) )
         if pressed : self.position_list.append(tuple((x, y)))
     
     def on_release(self, key):
