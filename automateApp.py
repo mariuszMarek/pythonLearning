@@ -12,11 +12,11 @@ from cmdInterface import prep_cmd
 # powershellVirtualAndroidScript = "F:\\memu\\runemucMultipleTimes.ps1"
 # subprocess.Popen(["powershell", powershellVirtualAndroidScript])
 # bede uruchamial proces po procesie
-SCREENSHOT_SIZE = 200
-prep_cmd()
+SCREENSHOT_SIZE = 300
+prep_cmd() # jak to dzialalo ? xD
 ListOfSteps = ManageSettings()
 ListOfSteps.save_or_load()
-ScreenShot = MakeScreenshot(ListOfSteps.position_list, SCREENSHOT_SIZE)
+
 # kolejny krok to analiza zdjec
 
 # for steps in ListOfSteps.position_list:

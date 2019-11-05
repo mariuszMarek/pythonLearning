@@ -17,7 +17,7 @@ class MakeScreenshot:
             my_bbox    = self.make_bbox(pos_x, pos_y)            
             temp_image = self.imageGrab.grab(
                 bbox=( my_bbox[0], my_bbox[1], my_bbox[2], my_bbox[3] ))
-            temp_name = ".\\{}\\{}_{}_{}_{}_{}_screenshot.tiff".format(dirImages,
+            temp_name = ".\\{}\\{}_{}_{}_{}_{}_screenshot.png".format(dirImages,
                 idx, my_bbox[0], my_bbox[1], my_bbox[2], my_bbox[3])
             temp_image.save(temp_name)
             self.__file_list.append(temp_name)
