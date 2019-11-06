@@ -14,6 +14,5 @@ class ReadEmails:
         self.service   = build('gmail', 'v1', http=self.creds.authorize(Http() ) )
     def get_emails(self):
         # Call the Gmail API to fetch INBOX
-        results = self.service.users().messages().list(userId='me', labelIds=['INBOX']).execute()
-        # results = self.service.users().messages().get(userId='me', labelIds=['INBOX'], format=None, metadataHeaders=None).execute()
+        results = self.service.users().messages().list(userId='me', labelIds=['INBOX']).execute() # returns all IDS of emails labled as INBOX        
         return results.get('messages', [])
