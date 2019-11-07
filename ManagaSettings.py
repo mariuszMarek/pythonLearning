@@ -1,30 +1,40 @@
-import pyautogui
-import pynput
-import PIL
+import os
+import copy
+
+from pathlib import Path
 from mouse_keybord_events import MouseEvents
 
 class ManageSettings:    
-    def __init__(self, record_or_not = False):
-        self.to_record     = record_or_not
-        self.autogui       = pyautogui
-        self.checkinput    = pynput
-        self.ini_path      = ".\\position_settings.ini" # sciezka gdzie bedzie zapisany plik z ustawieniami, ciekawe czy tak mozna        
+    def __init__(self, record_or_not = False,config_path = ".\\settings\\"):
+        self.to_record       = record_or_not
+        self.ini_path        = config_path + "\\position_settings.ini" # sciezka gdzie bedzie zapisany plik z ustawieniami, ciekawe czy tak mozna
+        path_to_save         = Path(config_path)
         self.__position_list = []
-    def save_or_load (self):
+        path_to_save.mkdir(exist_ok=True)
+
+    def save_or_load (self, sequence = 0):
             if(self.to_record):            
                 MouseEvents(self.position_list)
-                if self.position_list: self.save_settings()                               
-            else:
-                self.load_settings()                
-    def save_settings(self):
+                if self.position_list: self.save_settings(sequence)                                           
+            return self.load_settings()
+
+    def save_settings(self, sequence = 0):
         with open(self.ini_path, 'w') as file_writter:
             for posXY in self.position_list:
-                file_writter.write("{};{}\n".format(posXY[0], posXY[1]))
+                file_writter.write("{};{};{}\n".format(sequence, posXY[0], posXY[1]))
+
     def load_settings(self):
         with open(self.ini_path, 'r') as file_reader:
+            sequence_dict = {}            
             for line_XY in file_reader:
-                posX, posY = line_XY.split(";")
-                self.position_list.append( tuple (( int(posX), int(posY)) ) )
+                sequence, posX, posY = line_XY.strip().split(";")
+                XYposList = list((posX, posY))                
+                if not sequence in sequence_dict:
+                    sequence_dict.setdefault(sequence,[]).append( XYposList)
+                    # sequence_dict[sequence] = XYposList
+                else:        
+                    sequence_dict[sequence].append( XYposList)                                                                                         
+            return sequence_dict
     @property
     def position_list(self):
         return self.__position_list
@@ -33,11 +43,10 @@ class ManageSettings:
         self.__position_list = position_list
 
     
-# simple unit test
-# testKlas = ManageSettings(False)
-# testKlas.save_or_load()
-# for posXY in testKlas.position_list:
-#     print("pozycja x->{} y->{}".format(posXY[0],posXY[1]), end="\n")
-    
 
-
+testKlas = ManageSettings(False)
+testKlas.save_or_load()
+for key in testKlas.position_list:
+    print (key)
+    for test in testKlas.position_list[key]:
+        print (test)
