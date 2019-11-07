@@ -16,14 +16,14 @@ class ManageSettings:
             if(self.to_record):            
                 MouseEvents(self.position_list)
                 if self.position_list: self.save_settings(sequence)                                           
-            return self.load_settings()
+            return self.load_settings(sequence)
 
     def save_settings(self, sequence = 0):
         with open(self.ini_path, 'w') as file_writter:
             for posXY in self.position_list:
                 file_writter.write("{};{};{}\n".format(sequence, posXY[0], posXY[1]))
 
-    def load_settings(self):
+    def load_settings(self, return_sequence = 0):
         with open(self.ini_path, 'r') as file_reader:
             sequence_dict = {}            
             for line_XY in file_reader:
@@ -33,7 +33,7 @@ class ManageSettings:
                     sequence_dict[sequence] = [XYposList]
                 else:        
                     sequence_dict[sequence].append(XYposList)                                                                                         
-            return sequence_dict
+            return sequence_dict[str(return_sequence)] if str(return_sequence) in sequence_dict else ["missing given sequence for num",return_sequence]
     @property
     def position_list(self):
         return self.__position_list
@@ -43,9 +43,6 @@ class ManageSettings:
 
     
 
-testKlas = ManageSettings(False)
-testKlas.save_or_load()
-for key in testKlas.position_list:
-    print (key)
-    for test in testKlas.position_list[key]:
-        print (test)
+# testKlas = ManageSettings(False)
+# for posXY in testKlas.save_or_load(0):
+#     print(posXY)
