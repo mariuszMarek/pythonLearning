@@ -28,12 +28,11 @@ class ManageSettings:
             sequence_dict = {}            
             for line_XY in file_reader:
                 sequence, posX, posY = line_XY.strip().split(";")
-                XYposList = list((posX, posY))                
-                if not sequence in sequence_dict:
-                    sequence_dict.setdefault(sequence,[]).append( XYposList)
-                    # sequence_dict[sequence] = XYposList
+                XYposList = [posX, posY]                
+                if not sequence in sequence_dict:                    
+                    sequence_dict[sequence] = [XYposList]
                 else:        
-                    sequence_dict[sequence].append( XYposList)                                                                                         
+                    sequence_dict[sequence].append(XYposList)                                                                                         
             return sequence_dict
     @property
     def position_list(self):
