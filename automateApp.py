@@ -23,7 +23,7 @@ QUINDAN_APP    = "F:\\memu\\base.apk"
 INVITE_CODE    = "il6MzssI"
 GENERIC_PASS   = "Test123456"
 LIST_OF_EMAILS = "F:\\memu\\listOfMyEmails.txt"
-
+# jednak potrzebuję mieć możliwość posiadania więcej niż jednej instrukcji na raz
 # potrzebuje miec maila z pliku tekstowego, kod po wyslaniu maila
 lines_of_emails = open(LIST_OF_EMAILS, 'r').readlines()
 for num in range(0, NUM_OF_INSTACE):
