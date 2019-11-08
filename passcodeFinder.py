@@ -16,6 +16,8 @@ class ParsEmail(ReadEmails):
             correct_email_to   = False
             correct_subject    = False
             for email_subject in msg['payload']['headers']:
+                print(
+                    "Tag ->{}, wartosc ->{}".format(email_subject['name'], email_subject['value']))
                 if email_subject['name'] == 'From'    and email_subject['value'] == email_from:     correct_email_from = True
                 if email_subject['name'] == 'To'      and email_subject['value'] == email_to:       correct_email_to   = True
                 if email_subject['name'] == 'Subject' and email_subject['value'] == subjec_to_find: correct_subject    = True

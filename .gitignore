@@ -60,3 +60,4 @@ log.txt
 *.jpg
 *.tiff
 *.png
+token.json

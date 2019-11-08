@@ -7,9 +7,11 @@ from mouse_keybord_events import MouseEvents
 class ManageSettings:    
     def __init__(self, record_or_not = False,config_path = ".\\settings\\"):
         self.to_record       = record_or_not
-        self.ini_path        = config_path + "\\position_settings.ini" # sciezka gdzie bedzie zapisany plik z ustawieniami, ciekawe czy tak mozna
-        path_to_save         = Path(config_path)
+        self.ini_path        = config_path # sciezka gdzie bedzie zapisany plik z ustawieniami, ciekawe czy tak mozna
+        self.ini_file_name   = "_position_settings.ini"
+        self.config_file     = ""
         self.__position_list = []
+        path_to_save         = Path(config_path)
         path_to_save.mkdir(exist_ok=True)
 
     def save_or_load (self, sequence = 0):
@@ -19,12 +21,13 @@ class ManageSettings:
             return self.load_settings(sequence)
 
     def save_settings(self, sequence = 0):
-        with open(self.ini_path, 'w') as file_writter:
+        self.config_file = self.ini_path + str(sequence) + self.ini_file_name
+        with open(self.config_file, 'w') as file_writter:
             for posXY in self.position_list:
                 file_writter.write("{};{};{}\n".format(sequence, posXY[0], posXY[1]))
 
     def load_settings(self, return_sequence = 0):
-        with open(self.ini_path, 'r') as file_reader:
+        with open(self.config_file, 'r') as file_reader:
             sequence_dict = {}            
             for line_XY in file_reader:
                 sequence, posX, posY = line_XY.strip().split(";")

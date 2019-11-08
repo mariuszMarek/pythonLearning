@@ -14,59 +14,92 @@ from passcodeFinder import ParsEmail
 SCREENSHOT_SIZE = 300
 NUM_OF_INSTACE = 1
 prep_cmd() # jak to dzialalo ? xD do przypomnienia na później
-RecordStep  = False 
+RecordStep     = False  # to powinno byc brane z parametrów ale na razie będzie tak na sztywno
+# RecordStep     = True  # to powinno byc brane z parametrów ale na razie będzie tak na sztywno
 
 
-ListOfSteps    = ManageSettings(RecordStep) # need to update this with method to record steps
-memuc_exe      = 'F:\\Program Files\\memu\\MEmu\\memuc.exe'
-QUINDAN_APP    = "F:\\memu\\base.apk"
-INVITE_CODE    = "il6MzssI"
-GENERIC_PASS   = "Test123456"
-LIST_OF_EMAILS = "F:\\memu\\listOfMyEmails.txt"
+ListOfSteps     = ManageSettings(RecordStep) # need to update this with method to record steps
+MEMUC_EXE       = 'F:\\Program Files\\memu\\MEmu\\memuc.exe'
+QUINDAN_APP     = "F:\\memu\\base.apk"
+INVITE_CODE     = "il6MzssI"
+GENERIC_PASS    = "Test123456"
+LIST_OF_EMAILS  = "F:\\memu\\listOfMyEmails.txt"
+EMAIL_FROM      = "Webnovel <noreply@webnovel.com>"
+WINDOW_NAME     = "Memu"
+SUBJECT_TO_FIND = "Activate your Webnovel account"
 # jednak potrzebuję mieć możliwość posiadania więcej niż jednej instrukcji na raz
 # potrzebuje miec maila z pliku tekstowego, kod po wyslaniu maila
+sequence_num    = 0
 lines_of_emails = open(LIST_OF_EMAILS, 'r').readlines()
+email_parser    = ParsEmail()
 for num in range(0, NUM_OF_INSTACE):
-    email_to_use = lines_of_emails[num].strip()
-    print(email_to_use)
-    exit()
-
-    subprocess.Popen([memuc_exe, "remove"    ,"-i","{}".format(num)]).wait()
-    subprocess.Popen([memuc_exe, "create"    , "51"]).wait()
-    subprocess.Popen([memuc_exe, "setconfig" , "-i", "{}".format(num),"cpus","2"]).wait()
-    subprocess.Popen([memuc_exe, "setconfig" , "-i", "{}".format(num),"memory","2048"]).wait()
-    subprocess.Popen([memuc_exe, "setconfig" , "-i", "{}".format(num),"turbo_mode","0"]).wait()
-    subprocess.Popen([memuc_exe, "start"     , "-i", "{}".format(num)]).wait()
-    subprocess.Popen([memuc_exe, "adb"       , "-i", "{}".format(num),"shell","input","keyevent","3"]).wait()
-    subprocess.Popen([memuc_exe, "installapp", "-i", "{}".format(num),"{}".format(QUINDAN_APP)]).wait()
-
-    WindowName = "Memu" if num == 0 else "Memu" + str(num)
-    handle = win32gui.FindWindow(None,WindowName)
-    win32gui.SetForegroundWindow(handle)
-    time.sleep((60*2))
-    print("powinno sie zainstalowac")
-    ListOfSteps.save_or_load()
-    if RecordStep and num > 0:
-        for index, steps in enumerate(ListOfSteps.position_list):
-            #move the coursor and do the click
-            if index == 5: #this step is after 
-                pass
-    time.sleep((60*60))
+    email_to_use   = lines_of_emails[num].strip()
+    passcode       = ""
+    emulator_index = 0
     
-    # potrebuje jeszcze odczyl z pliku TXT wartosci maila i usuniecia go z tego pliku
-    # memuc adb - i $index  "shell input keyevent 3"
-    # memuc installapp - i $index "F:\memu\base.apk"
-    # subprocess.Popen([memuc_exe, "remove","-i","{}".format(num)]).wait()
+    
+    
+    subprocess.Popen([MEMUC_EXE, "remove", "-i", "{}".format(emulator_index)]).wait()
+    subprocess.Popen([MEMUC_EXE, "create", "51"]).wait()
+    subprocess.Popen([MEMUC_EXE, "setconfig" , "-i", "{}".format(emulator_index),"cpus","2"]).wait()
+    subprocess.Popen([MEMUC_EXE, "setconfig" , "-i", "{}".format(emulator_index),"memory","2048"]).wait()
+    subprocess.Popen([MEMUC_EXE, "setconfig" , "-i", "{}".format(emulator_index),"turbo_mode","0"]).wait()
+    subprocess.Popen([MEMUC_EXE, "start"     , "-i", "{}".format(emulator_index)]).wait() # to gowno sie cos psuje, trudno pozostaje sleep
 
-    pass
+    Whandle = win32gui.FindWindow(None, WINDOW_NAME)
+    win32gui.SetForegroundWindow(Whandle)  # na wrazie czego    
+    
+    subprocess.Popen([MEMUC_EXE, "adb"       , "-i", "{}".format(emulator_index),"shell","input","keyevent","3"]).wait()
+    # time.sleep(1)
+    subprocess.Popen([MEMUC_EXE, "adb"       , "-i", "{}".format(emulator_index),"install", "{}".format(QUINDAN_APP)]).wait() # moze tutaj zmienic na adb install path_to_apk ?
+    # subprocess.Popen([MEMUC_EXE, "installapp", "-i", "{}".format(emulator_index),"{}".format(QUINDAN_APP)]).wait()
+
+    
+    pyperclip.copy(email_to_use)
+    if RecordStep : print('start recording steps') # dodac to do klasy manageSetings
+    posXY = ListOfSteps.save_or_load(sequence_num)
+    ScreenShots = MakeScreenshot(posXY, SCREENSHOT_SIZE)
+    ScreenShots.make_screensots()
+    # omijaj pierwsza instancje jako że nagrywają się kroki wczesniej. Generalnie zrobie to specjalna klasa ktora to ogarnie, bedzie wygladalo to lepiej
+    if RecordStep and num > 0:
+        for posX,posY in posXY:
+            pass
+            #move the coursor and do the click
+    else: # dla kazdego innego przypadku
+        for posX, posY in posXY:
+            #make the clicks
+            pass
+    sequence_num += 1
+    print("will wait for email")
+    while not passcode:
+        passcode = email_parser.find_passcode(EMAIL_FROM, email_to_use,SUBJECT_TO_FIND) #this needs to be in a loop as i don't know how long it will take to recive the email
+        print ("wating for email with passcode")
+        #cos kurwa tutaj nie działa
+        # po 3-5 razy bedzie musialo sie wylaczac bo prawdopodobnie mail przyszedł po chińsku, lel
+        time.sleep(5)
+    print ("recived passcode {}, start recording new instruction".format(passcode))
+    #z hadrkodować wklepanie kodu zapraszającego jako input z klawiatury ?
+    pyperclip.copy(passcode) # copy the passcode from email to the clippboard
+    posXY = ListOfSteps.save_or_load(sequence_num) #another steps to do
+    ScreenShots = MakeScreenshot(posXY, SCREENSHOT_SIZE)
+    ScreenShots.make_screensots()
+
+    if RecordStep and num > 0:
+        for posX, posY in posXY:
+            pass
+            #move the coursor and do the click
+    else:  # dla kazdego innego przypadku
+        for posX, posY in posXY:
+            #make the clicks
+            pass
+    time.sleep((60*60))
+    #tutaj wylaczamy emulator by moc go zabic
 
 with open(LIST_OF_EMAILS, 'w') as exit_file:
     for index, lines in enumerate(lines_of_emails):
          if index >= NUM_OF_INSTACE: exit_file.write(lines)
 
-ListOfSteps.save_or_load()
-ScreenShots = MakeScreenshot(ListOfSteps.position_list, SCREENSHOT_SIZE)
-ScreenShots.make_screensots()
+
 # pyautogui.moveTo(450, 450, duration=1.0)
 
 # pyautogui.click()
