@@ -13,7 +13,7 @@ from passcodeFinder import ParsEmail
 
 prep_cmd() # jak to dzialalo ? xD do przypomnienia na później
 RecordStep     = False  # to powinno byc brane z parametrów ale na razie będzie tak na sztywno
-RecordStep     = True  # to powinno byc brane z parametrów ale na razie będzie tak na sztywno
+# RecordStep     = True  # to powinno byc brane z parametrów ale na razie będzie tak na sztywno
 
 #most of those should be taken from the parser
 NUM_OF_INSTACE   = 1
@@ -26,16 +26,14 @@ LIST_OF_EMAILS   = "F:\\memu\\listOfMyEmails.txt"
 EMAIL_FROM       = "Webnovel <noreply@webnovel.com>"
 WINDOW_NAME      = "Memu"
 SUBJECT_TO_FIND  = "Activate your Webnovel account"
-MAX_NUM_OF_TRIES = 0
+MAX_NUM_OF_TRIES = 5
 
 ListOfSteps      = ManageSettings(RecordStep) # need to update this with method to record steps
 sequence_num     = 0
 lines_of_emails  = open(LIST_OF_EMAILS, 'r').readlines()
 email_parser     = ParsEmail()
 for_instances    = list(range(0, NUM_OF_INSTACE))
-
-# ScreenShots = MakeScreenshot(posXY, SCREENSHOT_SIZE)
-# ScreenShots.make_screensots()
+ScreenShots      = MakeScreenshot(SCREENSHOT_SIZE)
 
 for num in for_instances:
     successfull_email = True
@@ -48,9 +46,9 @@ for num in for_instances:
     subprocess.Popen([MEMUC_EXE, "create", "51"]).wait()
     subprocess.Popen([MEMUC_EXE, "setconfig" , "-i", "{}".format(emulator_index),"cpus","2"]).wait()
     subprocess.Popen([MEMUC_EXE, "setconfig" , "-i", "{}".format(emulator_index),"memory","2048"]).wait()
-    subprocess.Popen([MEMUC_EXE, "setconfig" , "-i", "{}".format(emulator_index),"turbo_mode","0"]).wait()
+    subprocess.Popen([MEMUC_EXE, "setconfig" , "-i", "{}".format(emulator_index),"turbo_mode","1"]).wait()
     subprocess.Popen([MEMUC_EXE, "start"     , "-i", "{}".format(emulator_index)]).wait() # to gowno sie cos psuje, trudno pozostaje sleep
-    time.sleep(1)
+
     Whandle = win32gui.FindWindow(None, WINDOW_NAME)
     win32gui.SetForegroundWindow(Whandle)  # na wrazie czego
     
@@ -59,7 +57,9 @@ for num in for_instances:
 
     pyperclip.copy(email_to_use)
     if RecordStep : print('start recording steps') # dodac to do klasy manageSetings
-    posXY = ListOfSteps.save_or_load(sequence_num) 
+    posXY = ListOfSteps.save_or_load(sequence_num)
+    ScreenShots.make_screensots(posXY, sequence_num)
+    input("wcisnij enter")
     # omijaj pierwsza instancje jako że nagrywają się kroki wczesniej. Generalnie zrobie to specjalna klasa ktora to ogarnie, bedzie wygladalo to lepiej bo aktualnie to chujowo
     if RecordStep and num > 0:
         for posX,posY in posXY:
@@ -70,22 +70,26 @@ for num in for_instances:
             #make the clicks
             pass
     sequence_num += 1
-    print("will wait for email")
+    print ("wating for email with passcode")    
     while not passcode:
         passcode = email_parser.find_passcode(EMAIL_FROM, email_to_use,SUBJECT_TO_FIND) #this needs to be in a loop as i don't know how long it will take to recive the email
-        print ("wating for email with passcode")
-        num_of_tries += 1
         if(num_of_tries > MAX_NUM_OF_TRIES): 
             successfull_email = False         
             NUM_OF_INSTACE += 1
             for_instances.append(NUM_OF_INSTACE)
+        num_of_tries += 1
         time.sleep(5)
+        if not passcode :print("wating for email with passcode")
 
     print ("recived passcode {}, start recording new instruction".format(passcode))
     pyperclip.copy(passcode) # copy the passcode from email to the clippboard
     pyperclip.paste()
-    pyperclip.copy(INVITE_CODE)
+    
+    print("invite code -> {}".format(INVITE_CODE))
+    
+
     posXY = ListOfSteps.save_or_load(sequence_num) #another steps to do
+    ScreenShots.make_screensots(posXY, sequence_num)
 
     if RecordStep and num > 0:
         for posX, posY in posXY:
