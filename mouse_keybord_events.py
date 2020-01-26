@@ -1,5 +1,6 @@
 from pynput.keyboard import Listener as KeyboardListener
 from pynput.mouse import Listener as MouseListener
+from MakeScreenshot import MakeScreenshot
 from pynput import mouse
 from pynput import keyboard
 
@@ -7,15 +8,24 @@ from pynput import keyboard
 class MouseEvents: #mozliwosc rozbudowy i zrobienia tego bardziej robust/generalnym
     def __init__(self, position_list = []):
         self.position_list = position_list
+        self._last_x = 0.0
+        self._last_y = 0.0
         self.start_recording()
+        self._SCREENSHOT_SIZE = 100
+        self.ScreenShots      = MakeScreenshot()
     def on_click(self,x, y, button, pressed):
         # print('{0} at {1}'.format( 'Pressed' if pressed else 'Released', (x, y) ) )
-        if pressed : self.position_list.append(tuple((x, y)))
+        self._last_x = x
+        self._last_y = y
+        if pressed : 
+            self.position_list.append(tuple((x, y, "0","M")))
+            self.ScreenShots.make_screensots(posXY, sequence_num)
     
     def on_release(self, key):
         if key == keyboard.Key.esc:
             print('{0} released, stipping recording'.format( key ) )
-            return False        
+            return False
+        self.position_list.append(tuple((self._last_x, self._last_y, key, "K")))
     def start_recording(self):
         with MouseListener(on_click=self.on_click) as listener:
             with KeyboardListener(on_release=self.on_release) as listener:

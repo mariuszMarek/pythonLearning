@@ -15,26 +15,27 @@ class ManageSettings:
 
     def save_or_load (self, sequence = 0):
         #potrzebuje zerowanie listy
-        self.config_file = self.ini_path + str(sequence) + self.ini_file_name
+        self.config_file   = self.ini_path + str(sequence) + self.ini_file_name
+        self.position_list = []  # need to clear the list
         #need to overwrite the settings so if we are missing the ini file it will start recording 
         if(not Path(self.config_file).is_file() and self.to_record): self.to_record = True 
-        if(self.to_record):            
+        if(self.to_record):                        
             MouseEvents(self.position_list)
-            if self.position_list: self.save_settings(sequence)                                           
+            if self.position_list:                
+                self.save_settings(sequence)
+                return self.position_list
         return self.load_settings(sequence)
 
     def save_settings(self, sequence = 0):        
         with open(self.config_file, 'w') as file_writter:
             for posXY in self.position_list:
-                file_writter.write("{};{};{}\n".format(sequence, posXY[0], posXY[1]))
-        self.position_list = [] # need to clear the list
-
+                file_writter.write("{};{};{};{}\n".format(sequence, posXY[0], posXY[1], posXY[2]))        
     def load_settings(self, return_sequence = 0):
         with open(self.config_file, 'r') as file_reader:
             sequence_dict = {}            
             for line_XY in file_reader:
-                sequence, posX, posY = line_XY.strip().split(";")
-                XYposList = [posX, posY]                
+                sequence, posX, posY, eventType = line_XY.strip().split(";")
+                XYposList = [posX, posY, eventType]
                 if not sequence in sequence_dict:                    
                     sequence_dict[sequence] = [XYposList]
                 else:        
