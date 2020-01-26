@@ -6,20 +6,24 @@ from pynput import keyboard
 
 
 class MouseEvents: #mozliwosc rozbudowy i zrobienia tego bardziej robust/generalnym
-    def __init__(self, position_list = []):
+    def __init__(self, sequence_num, position_list=[], SCREENSHOT_SIZE=100):
         self.position_list = position_list
-        self._last_x = 0.0
-        self._last_y = 0.0
+        self._last_x       = 0.0
+        self._last_y       = 0.0
+        self.num_of_click  = 0
+
         self.start_recording()
-        self._SCREENSHOT_SIZE = 100
-        self.ScreenShots      = MakeScreenshot()
+        self._SCREENSHOT_SIZE = SCREENSHOT_SIZE
+        self.ScreenShots      = MakeScreenshot(self._SCREENSHOT_SIZE, sequence_num)
+        
     def on_click(self,x, y, button, pressed):
         # print('{0} at {1}'.format( 'Pressed' if pressed else 'Released', (x, y) ) )
         self._last_x = x
         self._last_y = y
-        if pressed : 
+        if pressed :             
             self.position_list.append(tuple((x, y, "0","M")))
-            self.ScreenShots.make_screensots(posXY, sequence_num)
+            self.ScreenShots.make_screensots(x, y, self.num_of_click)
+        self.num_of_click += 1
     
     def on_release(self, key):
         if key == keyboard.Key.esc:

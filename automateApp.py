@@ -14,7 +14,7 @@ RecordStep     = False  # to powinno byc brane z parametrów ale na razie będzi
 RecordStep     = True   # to powinno byc brane z parametrów ale na razie będzie tak na sztywno
 
 #most of those should be taken from the parser
-NUM_OF_INSTACE   = 2
+NUM_OF_INSTACE   = 1
 MEMUC_EXE        = 'F:\\Program Files\\memu\\MEmu\\memuc.exe'
 QUINDAN_APP      = "F:\\memu\\base.apk"
 INVITE_CODE      = "il6MzssI"
@@ -65,8 +65,7 @@ for num in for_instances:
     print("zapisalo pierwszy krok, teraz wczyta haslo do googla do schowka")
     pyperclip.copy(HARDCODED_PASS)
     sequence_num += 1
-    posXY = ListOfSteps.save_or_load(sequence_num)
-    print(posXY)
+    posXY = ListOfSteps.save_or_load(sequence_num)    
     
     # omijaj pierwsza instancje jako że nagrywają się kroki wczesniej. Generalnie zrobie to specjalna klasa ktora to ogarnie, bedzie wygladalo to lepiej bo aktualnie to chujowo    
 

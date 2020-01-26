@@ -2,28 +2,28 @@ import PIL
 import os
 
 class MakeScreenshot:
-    def __init__(self, EXPAND_VALUE):        
+    def __init__(self, EXPAND_VALUE, sequence_num):
         self.imageGrab      = PIL.ImageGrab
         self.__file_list    = []
         self.__EXPAND_VALUE = EXPAND_VALUE
         self.__MAX_X        = int(PIL.ImageGrab.grab().size[0])
         self.__MAX_Y        = int(PIL.ImageGrab.grab().size[1])
+        self.sequence_num   = sequence_num
 
-    def make_screensots(self, XYpos_list, sequence_num):
-        self.XYpos_list = XYpos_list
+    def make_screensots(self, x, y, num_of_click):
         dirImages       = ".\\images"
         if not os.path.exists(dirImages):
             os.mkdir(dirImages)
-        for idx, XYpos in enumerate(self.XYpos_list):
-            pos_x      = int(XYpos[0])
-            pos_y      = int(XYpos[1])
-            my_bbox    = self.make_bbox(pos_x, pos_y)            
-            temp_image = self.imageGrab.grab(
-                bbox=( my_bbox[0], my_bbox[1], my_bbox[2], my_bbox[3] ))
-            temp_name = ".\\{}\\{}_{}_{}_{}_{}_{}_{}_screenshot.png".format(dirImages, sequence_num,
-                                                                            idx, my_bbox[0], my_bbox[1], my_bbox[2], my_bbox[3], XYpos[2])
-            temp_image.save(temp_name)
-            self.__file_list.append(temp_name)
+        
+        pos_x      = int(x)
+        pos_y      = int(y)
+        my_bbox    = self.make_bbox(pos_x, pos_y)            
+        temp_image = self.imageGrab.grab(
+            bbox=( my_bbox[0], my_bbox[1], my_bbox[2], my_bbox[3] ))
+        temp_name = ".\\{}\\{}_{}_{}_{}_{}_{}_screenshot.png".format(dirImages, self.sequence_num,
+                                                                        num_of_click, my_bbox[0], my_bbox[1], my_bbox[2], my_bbox[3])
+        temp_image.save(temp_name)
+        self.__file_list.append(temp_name)
     def make_bbox(self, pos_x=0, pos_y=0):
         pos_x1 = pos_x2 = pos_x
         pos_y1 = pos_y2 = pos_y
