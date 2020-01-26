@@ -3,6 +3,7 @@ from pynput.mouse import Listener as MouseListener
 from MakeScreenshot import MakeScreenshot
 from pynput import mouse
 from pynput import keyboard
+import time
 
 
 class MouseEvents: #mozliwosc rozbudowy i zrobienia tego bardziej robust/generalnym
@@ -20,16 +21,18 @@ class MouseEvents: #mozliwosc rozbudowy i zrobienia tego bardziej robust/general
         # print('{0} at {1}'.format( 'Pressed' if pressed else 'Released', (x, y) ) )
         self._last_x = x
         self._last_y = y
+        time_of_click = time.strftime("%H%M%S")
         if pressed :             
-            self.position_list.append(tuple((x, y, "0","M")))
-            self.ScreenShots.make_screensots(x, y, self.num_of_click)
+            self.position_list.append(tuple((x, y, "0","M", time_of_click)))
+            self.ScreenShots.make_screensots(x, y, self.num_of_click, time_of_click)
             self.num_of_click += 1
     
     def on_release(self, key):
+        time_of_click = time.strftime("%H%M%S")
         if key == keyboard.Key.shift:
             print('{0} released, stopping recording'.format( key ) )
             return False
-        self.position_list.append(tuple((self._last_x, self._last_y, key, "K")))
+        self.position_list.append(tuple((self._last_x, self._last_y, key, "K", time_of_click)))
     def start_recording(self):
         with MouseListener(on_click=self.on_click) as listener:
             with KeyboardListener(on_release=self.on_release) as listener:

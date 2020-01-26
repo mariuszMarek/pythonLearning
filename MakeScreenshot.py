@@ -10,7 +10,7 @@ class MakeScreenshot:
         self.__MAX_Y        = int(PIL.ImageGrab.grab().size[1])
         self.sequence_num   = sequence_num
 
-    def make_screensots(self, x, y, num_of_click):
+    def make_screensots(self, x, y, num_of_click, date_string = ""):
         dirImages       = ".\\images"
         if not os.path.exists(dirImages):
             os.mkdir(dirImages)
@@ -20,8 +20,8 @@ class MakeScreenshot:
         my_bbox    = self.make_bbox(pos_x, pos_y)            
         temp_image = self.imageGrab.grab(
             bbox=( my_bbox[0], my_bbox[1], my_bbox[2], my_bbox[3] ))
-        temp_name = ".\\{}\\{}_{}_{}_{}_{}_{}_screenshot.png".format(dirImages, self.sequence_num,
-                                                                        num_of_click, my_bbox[0], my_bbox[1], my_bbox[2], my_bbox[3])
+        temp_name = ".\\{}\\{}_{}_{}_{}_{}_{}_{}_screenshot.png".format(dirImages, self.sequence_num,
+                                                                        num_of_click, my_bbox[0], my_bbox[1], my_bbox[2], my_bbox[3], date_string)
         temp_image.save(temp_name)
         self.__file_list.append(temp_name)
     def make_bbox(self, pos_x=0, pos_y=0):

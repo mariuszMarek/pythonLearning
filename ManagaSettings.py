@@ -29,14 +29,14 @@ class ManageSettings:
     def save_settings(self, sequence = 0):        
         with open(self.config_file, 'w') as file_writter:
             for posXY in self.position_list:
-                file_writter.write("{};{};{};{};{}\n".format(
-                    sequence, posXY[0], posXY[1], posXY[2], posXY[3]))
+                file_writter.write("{};{};{};{};{};{}\n".format(
+                    sequence, posXY[0], posXY[1], posXY[2], posXY[3], posXY[4]))
     def load_settings(self, return_sequence = 0):
         with open(self.config_file, 'r') as file_reader:
             sequence_dict = {}            
             for line_XY in file_reader:
-                sequence, posX, posY, eventType = line_XY.strip().split(";")
-                XYposList = [posX, posY, eventType]
+                sequence, posX, posY, eventType, date_time = line_XY.strip().split(";")
+                XYposList = [posX, posY, eventType, date_time]
                 if not sequence in sequence_dict:                    
                     sequence_dict[sequence] = [XYposList]
                 else:        

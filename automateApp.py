@@ -82,7 +82,11 @@ for num in for_instances:
 
     print ("wating for email with passcode")           
     while not passcode:
-        passcode = email_parser.find_passcode(EMAIL_FROM, email_to_use,SUBJECT_TO_FIND) #this needs to be in a loop as i don't know how long it will take to recive the email
+        try:
+            passcode = email_parser.find_passcode(EMAIL_FROM, email_to_use,SUBJECT_TO_FIND) #this needs to be in a loop as i don't know how long it will take to recive the email
+        except ConnectionAbortedError: #reestablish the connecton
+            email_parser = ParsEmail()            
+            passcode     = email_parser.find_passcode(EMAIL_FROM, email_to_use, SUBJECT_TO_FIND)
         # for now i'll trun this off
         # if(num_of_tries > MAX_NUM_OF_TRIES): 
         #     successfull_email = False         
@@ -93,18 +97,18 @@ for num in for_instances:
         if not passcode :print("wating for email with passcode")
 
     print ("recived passcode {}, start recording new instruction".format(passcode))
-    pyperclip.copy(passcode) # copy the passcode from email to the clippboard
-    pyperclip.paste()
+    pyperclip.copy(passcode) # copy the passcode from email to the clippboard            
+    sequence_num += 1
+    posXY = ListOfSteps.save_or_load(sequence_num) # po wklejonym kodzie zapraszajacym jeszcze trzeba ogarnac wklejenie zaproszenai
     
-    print("invite code -> {}".format(INVITE_CODE))
+    pyperclip.copy(INVITE_CODE)
+    print("teraz kod zaprosenia do wklejenie")
     sequence_num += 1
     posXY = ListOfSteps.save_or_load(sequence_num) # po wklejonym kodzie zapraszajacym jeszcze trzeba ogarnac wklejenie zaproszenai
     
 
-    print("teraz kod zaprosenia do wklejenie")
-    pyperclip.copy(passcode) 
-    subprocess.Popen([MEMUC_EXE, "stop", "-i", "{}".format(emulator_index)]).wait()    
 
+subprocess.Popen([MEMUC_EXE, "stop", "-i", "{}".format(emulator_index)]).wait()    
 with open(LIST_OF_EMAILS, 'w') as exit_file:
     for index, lines in enumerate(lines_of_emails):
          if index >= NUM_OF_INSTACE: exit_file.write(lines)
