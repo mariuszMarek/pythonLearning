@@ -23,7 +23,7 @@ class MouseEvents: #mozliwosc rozbudowy i zrobienia tego bardziej robust/general
         self._last_y = y
         time_of_click = time.strftime("%H%M%S")
         if pressed :             
-            self.position_list.append(tuple((x, y, "0","M", time_of_click)))
+            self.position_list.append(tuple((x, y, button,"M", time_of_click)))
             self.ScreenShots.make_screensots(x, y, self.num_of_click, time_of_click)
             self.num_of_click += 1
     
