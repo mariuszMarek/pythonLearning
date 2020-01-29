@@ -34,16 +34,16 @@ class ManageSettings:
                 file_writter.write("{};{};{};{};{};{}\n".format(
                     sequence, posXY[0], posXY[1], posXY[2], posXY[3], posXY[4]))
     def load_settings(self, return_all_or_one = False, return_sequence = 0):        
-        for files in reversed(os.listdir(self.ini_path)):
-            sequence_dict = {}
-            if(files.endswith(".ini")):
+        sequence_dict = {}
+        for files in reversed(os.listdir(self.ini_path)):            
+            if(files.endswith(".ini")):                
                 with open(self.ini_path + files, 'r') as file_reader:                        
                     for line_XY in file_reader:                        
                         sequence, posX, posY, eventValue, eventType, date_time = line_XY.strip().split(";")
-                        XYposList = [posX, posY, eventType,eventValue, date_time]
-                        if not sequence in sequence_dict:                    
+                        XYposList = [posX, posY, eventType,eventValue, date_time]                        
+                        if not sequence in sequence_dict:                                                
                             sequence_dict[sequence] = [XYposList]
-                        else:        
+                        else:                                    
                             sequence_dict[sequence].append(XYposList)                                                                                                 
         if(return_all_or_one): return sequence_dict
         return sequence_dict[str(return_sequence)] if str(return_sequence) in sequence_dict else ["missing given sequence for num",return_sequence]
