@@ -10,7 +10,9 @@ class Parser:
         self.list_of_steps_formated = {}
         self.list_of_steps_keyboard = []
         self.list_of_steps_mouse    = {}
-        self._KEYBOARD              = "K"
+        self.remove_redundancy      = {}
+        self._KEYBOARD_PRESS        = "KP"
+        self._KEYBOARD_RELEASE      = "KR"
         self._MOUSE                 = "M"
         self._MOUSE_CONTROLLER      = Mouse_Controller()
         self._KEYBOARD_CONTROLLER   = Keyboard_Controller()
@@ -28,14 +30,20 @@ class Parser:
             
             if old_time != time_stamp:
                 delta_time = current_step_time - old_time
-                time.sleep(delta_time.total_seconds())  # this is in order to replicate the original delay
+                try:                    
+                    time.sleep(delta_time.total_seconds()+1)
+                except ValueError as identifier:
+                    print (currentSteps)
+                    print (delta_time.total_seconds()+2)
+                    print(identifier)
+                    pass                
             if event_type == self._MOUSE:                
                 self.handel_mouse(x_pos,y_pos,function_key)
-            if event_type == self._KEYBOARD:                                                
+            if event_type == self._KEYBOARD_PRESS:                                                
                 if len(function_key) > 1:
                     old_key = function_key
                     was_control_button = True
-                    continue                
+                    continue
                 self.handel_keyboard(function_key, was_control_button, old_key)
                 was_control_button = False
             old_time = current_step_time
@@ -51,12 +59,14 @@ class Parser:
         else: 
             self._KEYBOARD_CONTROLLER.press(function_key)            
     def pars_keyboard (self):
-        for steps in reversed(self.list_of_steps_raw):
-            if self._KEYBOARD == steps[2]: 
-                key_pressed = steps[3]
-                key_pressed = key_pressed.replace("Key.", "")
-                key_pressed = key_pressed.replace("'", "")
-                self.list_of_steps_keyboard.append([steps[2], steps[0], steps[1], key_pressed, steps[4]])
+        self.remove_redundancy = {}
+        for org_index, steps in list(enumerate(self.list_of_steps_raw)):
+            if self._KEYBOARD_PRESS == steps[2]:
+                key_pressed  = steps[3]
+                key_pressed  = key_pressed.replace("Key.", "")
+                key_pressed  = key_pressed.replace("'", "")
+                value_arrays = [steps[2], steps[0], steps[1], key_pressed, steps[4]]
+                self.list_of_steps_keyboard[org_index] = (value_arrays)
     
     def pars_mouse (self):
         for index, steps in list(enumerate(self.list_of_steps_raw)):
@@ -75,7 +85,7 @@ class Parser:
             step = ""
             if self._MOUSE == steps[2]:
                 step = self.list_of_steps_mouse[org_index]
-            elif self._KEYBOARD == steps[2]:
+            elif self._KEYBOARD_PRESS == steps[2] and steps in self.remove_redundancy:
                 step = self.list_of_steps_keyboard[keyboard_index]
                 keyboard_index += 1
             self.list_of_steps_formated[org_index] = step
