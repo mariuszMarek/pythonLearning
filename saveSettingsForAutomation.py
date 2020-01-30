@@ -1,3 +1,4 @@
+import winsound
 import subprocess, sys
 import pyautogui
 import pyperclip
@@ -27,11 +28,13 @@ MAX_NUM_OF_TRIES = 5
 HARDCODED_PASS   = "PythonAutomate12#" # bedzie brane z parametru
 PROGRAM_NAME     = "Webnovel"
 
-ListOfSteps      = ManageSettings(RecordStep) # need to update this with method to record steps
+ListOfSteps      = ManageSettings() # need to update this with method to record steps
 sequence_num     = 0
 lines_of_emails  = open(LIST_OF_EMAILS, 'r').readlines()
 email_parser     = ParsEmail()
 for_instances    = list(range(0, NUM_OF_INSTACE))
+frequency        = 3500  # Set Frequency To 2500 Hertz
+duration         = 500  # Set Duration To 1000 ms == 1 second
 
 
 for num in for_instances:
@@ -54,30 +57,31 @@ for num in for_instances:
     subprocess.Popen([MEMUC_EXE, "start"    , "-i", "{}".format(emulator_index)]).wait() # to gowno sie cos psuje, trudno pozostaje sleep    
     Whandle = win32gui.FindWindow(None, WINDOW_NAME)
     win32gui.SetForegroundWindow(Whandle)  # na wrazie czego, tutaj chyba trzeba try: catch jak chińskie gówno się włączy
-    print("Wait 1 min for program to start") 
-    time.sleep(60)
-
+    print("Wait 50 s for program to start") 
+    time.sleep(50)
+    winsound.Beep(frequency, duration)
+    print("wczyta teraz emaila do uzycia {}".format(email_to_use))
     pyperclip.copy(email_to_use)
     if RecordStep : print('start recording steps') # dodac to do klasy manageSetings
-    posXY = ListOfSteps.save_or_load(sequence_num)
+    posXY = ListOfSteps.record_settings(sequence_num)
     
 
     print("zapisalo pierwszy krok, teraz wczyta haslo do googla do schowka")
     pyperclip.copy(HARDCODED_PASS)
     sequence_num += 1
-    posXY = ListOfSteps.save_or_load(sequence_num)    
+    posXY = ListOfSteps.record_settings(sequence_num)
     
     # omijaj pierwsza instancje jako że nagrywają się kroki wczesniej. Generalnie zrobie to specjalna klasa ktora to ogarnie, bedzie wygladalo to lepiej bo aktualnie to chujowo    
 
     print("zapisalo kolejny krok, teraz skopiuje webnowel do schowka")
     pyperclip.copy(PROGRAM_NAME)
     sequence_num += 1
-    posXY = ListOfSteps.save_or_load(sequence_num)
+    posXY = ListOfSteps.record_settings(sequence_num)
     
     print("zapisalo kojeny krok, teraz wklei emaila do schowka")
     pyperclip.copy(email_to_use)
     sequence_num += 1
-    posXY = ListOfSteps.save_or_load(sequence_num)
+    posXY = ListOfSteps.record_settings(sequence_num)
     
 
     print ("wating for email with passcode")           
@@ -99,12 +103,12 @@ for num in for_instances:
     print ("recived passcode {}, start recording new instruction".format(passcode))
     pyperclip.copy(passcode) # copy the passcode from email to the clippboard            
     sequence_num += 1
-    posXY = ListOfSteps.save_or_load(sequence_num) # po wklejonym kodzie zapraszajacym jeszcze trzeba ogarnac wklejenie zaproszenai
+    posXY = ListOfSteps.record_settings(sequence_num) # po wklejonym kodzie zapraszajacym jeszcze trzeba ogarnac wklejenie zaproszenai
     
     pyperclip.copy(INVITE_CODE)
     print("teraz kod zaprosenia do wklejenie")
     sequence_num += 1
-    posXY = ListOfSteps.save_or_load(sequence_num) # po wklejonym kodzie zapraszajacym jeszcze trzeba ogarnac wklejenie zaproszenai
+    posXY = ListOfSteps.record_settings(sequence_num) # po wklejonym kodzie zapraszajacym jeszcze trzeba ogarnac wklejenie zaproszenai
     
 
 
@@ -112,17 +116,3 @@ subprocess.Popen([MEMUC_EXE, "stop", "-i", "{}".format(emulator_index)]).wait()
 with open(LIST_OF_EMAILS, 'w') as exit_file:
     for index, lines in enumerate(lines_of_emails):
          if index >= NUM_OF_INSTACE: exit_file.write(lines)
-
-
-# pyautogui.moveTo(450, 450, duration=1.0)
-
-# pyautogui.click()
-# pyautogui.moveRel(None, 10)  # move mouse 10 pixels down
-# pyautogui.doubleClick()
-# pyautogui.moveTo(500, 500, duration=2, tween=pyautogui.easeInOutQuad)  # use tweening/easing function to move mouse over 2 seconds.
-# pyautogui.typewrite('Hello world!', interval=0.25)  # type with quarter-second pause in between each key
-# pyautogui.press('esc')
-# pyautogui.keyDown('shift')
-# pyautogui.press(['left', 'left', 'left', 'left', 'left', 'left'])
-# pyautogui.keyUp('shift')
-# pyautogui.hotkey('ctrl', 'c')
