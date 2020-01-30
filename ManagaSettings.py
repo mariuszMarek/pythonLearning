@@ -6,8 +6,7 @@ from mouse_keybord_events import MouseEvents
 
 
 class ManageSettings:    
-    def __init__(self, record_or_not = False,config_path = ".\\settings\\"):
-        self.to_record       = record_or_not
+    def __init__(self,config_path = ".\\settings\\"):        
         self.ini_path        = config_path # sciezka gdzie bedzie zapisany plik z ustawieniami, ciekawe czy tak mozna
         self.ini_file_name   = "_position_settings.ini"
         self.config_file     = ""
@@ -15,17 +14,19 @@ class ManageSettings:
         path_to_save         = Path(config_path)
         path_to_save.mkdir(exist_ok=True)
 
-    def save_or_load(self, load_all_or_one=False, sequence=0):
-        #potrzebuje zerowanie listy
-        self.config_file   = self.ini_path + str(sequence) + self.ini_file_name
+    def record_settings(self,sequence=0):        
+        self.config_file = self.ini_path + str(sequence) + self.ini_file_name
         self.position_list = []  # need to clear the list
-        #need to overwrite the settings so if we are missing the ini file it will start recording 
-        if(not Path(self.config_file).is_file() and self.to_record): self.to_record = True 
-        if(self.to_record):                        
-            MouseEvents(sequence, self.position_list)
-            if self.position_list:                
-                self.save_settings(sequence)
-                return self.position_list
+        #need to overwrite the settings so if we are missing the ini file it will start recording        
+        MouseEvents(sequence, self.position_list)
+        if self.position_list:
+            self.save_settings(sequence)
+            return self.position_list
+
+    def settings_loader(self, load_all_or_one=False, sequence=0):
+        #potrzebuje zerowanie listy
+        self.config_file   = self.ini_path + str(sequence) + self.ini_file_name               
+        if not Path(self.config_file).is_file() : self.record_settings(sequence)        
         return self.load_settings(load_all_or_one, sequence)
 
     def save_settings(self, sequence = 0):        
@@ -33,6 +34,7 @@ class ManageSettings:
             for posXY in self.position_list:
                 file_writter.write("{};{};{};{};{};{}\n".format(
                     sequence, posXY[0], posXY[1], posXY[2], posXY[3], posXY[4]))
+
     def load_settings(self, return_all_or_one = False, return_sequence = 0):        
         sequence_dict = {}
         for files in reversed(os.listdir(self.ini_path)):            
@@ -45,7 +47,7 @@ class ManageSettings:
                             sequence_dict[sequence] = [XYposList]
                         else:                                    
                             sequence_dict[sequence].append(XYposList)                                                                                                 
-        if(return_all_or_one): return sequence_dict
+        if return_all_or_one: return sequence_dict
         return sequence_dict[str(return_sequence)] if str(return_sequence) in sequence_dict else ["missing given sequence for num",return_sequence]
     @property
     def position_list(self):
