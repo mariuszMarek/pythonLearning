@@ -13,6 +13,9 @@ class MouseEvents: #mozliwosc rozbudowy i zrobienia tego bardziej robust/general
         self._last_y          = 0.0
         self.num_of_click     = 0
         self._SCREENSHOT_SIZE = SCREENSHOT_SIZE
+        self._MOUSE           = "M"
+        self._KEY_PRESS       = "KP"
+        self._KEY_RELEASE     = "KR"
         self.ScreenShots      = MakeScreenshot(self._SCREENSHOT_SIZE, sequence_num)
         
         self.start_recording() # this has to be last
@@ -23,23 +26,23 @@ class MouseEvents: #mozliwosc rozbudowy i zrobienia tego bardziej robust/general
         self._last_y = y
         time_of_click = time.strftime("%H%M%S")
         if pressed :             
-            self.position_list.append(tuple((x, y, button,"M", time_of_click)))
+            self.position_list.append(tuple((x, y, button,self._MOUSE, time_of_click)))
             self.ScreenShots.make_screensots(x, y, self.num_of_click, time_of_click)
             self.num_of_click += 1
     
-    def on_release(self, key):
+    def on_release(self, key): #this is for the future
         time_of_click = time.strftime("%H%M%S")
         if key == keyboard.Key.shift:
             print('{0} released, stopping recording'.format( key ) )
             return False
-        self.position_list.append(tuple((self._last_x, self._last_y, key, "KR", time_of_click)))
+        self.position_list.append(tuple((self._last_x, self._last_y, key, self._KEY_RELEASE, time_of_click)))
 
     def on_press(self, key):
         time_of_click = time.strftime("%H%M%S")
         if key == keyboard.Key.shift:
             print('{0} pressed, stopping recording'.format( key ) )
             return False
-        self.position_list.append(tuple((self._last_x, self._last_y, key, "KP", time_of_click)))
+        self.position_list.append(tuple((self._last_x, self._last_y, key, self._KEY_PRESS, time_of_click)))
 
     def start_recording(self):
         with MouseListener(on_click=self.on_click) as listener:
