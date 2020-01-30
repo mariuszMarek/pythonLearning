@@ -33,9 +33,17 @@ class MouseEvents: #mozliwosc rozbudowy i zrobienia tego bardziej robust/general
             print('{0} released, stopping recording'.format( key ) )
             return False
         self.position_list.append(tuple((self._last_x, self._last_y, key, "K", time_of_click)))
+
+    def on_press(self, key):
+        time_of_click = time.strftime("%H%M%S")
+        if key == keyboard.Key.shift:
+            print('{0} pressed, stopping recording'.format( key ) )
+            return False
+        self.position_list.append(tuple((self._last_x, self._last_y, key, "K", time_of_click)))
+
     def start_recording(self):
         with MouseListener(on_click=self.on_click) as listener:
-            with KeyboardListener(on_release=self.on_release) as listener:
+            with KeyboardListener(on_press=self.on_press) as listener:
                 listener.join()
 
 #a simple "unit" test
