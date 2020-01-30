@@ -62,7 +62,7 @@ class Parser:
             self._KEYBOARD_CONTROLLER.press(function_key)            
     def pars_keyboard (self):
         self.remove_redundancy = {}
-        for steps in list(enumerate(self.list_of_steps_raw)):
+        for steps in self.list_of_steps_raw:            
             if self._KEYBOARD_PRESS == steps[2]:
                 key_pressed  = steps[3]
                 key_pressed  = key_pressed.replace("Key.", "")
@@ -89,7 +89,7 @@ class Parser:
             step = ""
             if self._MOUSE == steps[2]:
                 step = self.list_of_steps_mouse[org_index]
-            elif self._KEYBOARD_PRESS == steps[2] and steps in self.remove_redundancy:
+            elif self._KEYBOARD_PRESS == steps[2]:
                 step = self.list_of_steps_keyboard[keyboard_index]
                 keyboard_index += 1
             self.list_of_steps_formated[org_index] = step
