@@ -31,7 +31,7 @@ class Parser:
             if old_time != time_stamp:
                 delta_time = current_step_time - old_time
                 try:                    
-                    time.sleep(delta_time.total_seconds()+1)
+                    time.sleep(delta_time.total_seconds()+3)
                 except ValueError as identifier:
                     print (currentSteps)
                     print (delta_time.total_seconds()+2)
