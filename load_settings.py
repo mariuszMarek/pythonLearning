@@ -14,7 +14,7 @@ from StepParser import Parser
 prep_cmd()  # to raczej potrzebne do glownego programu, ten plik bedzie podprogramem
 
 #most of those should be taken from the parser
-NUM_OF_INSTACE      = 1
+NUM_OF_INSTACE      = 3
 MEMUC_EXE           = 'F:\\Program Files\\memu\\MEmu\\memuc.exe'
 QUINDAN_APP         = "F:\\memu\\base.apk"
 INVITE_CODE         = "il6MzssI"
@@ -29,11 +29,10 @@ PROGRAM_NAME        = "Webnovel"
 LOAD_ALL            = True
 
 ListOfSteps     = ManageSettings()
-sequence_num    = 1
 lines_of_emails = open(LIST_OF_EMAILS, 'r').readlines()
 email_parser    = ParsEmail()
 for_instances   = list(range(0, NUM_OF_INSTACE))
-Steps_to_do     = ListOfSteps.settings_loader(LOAD_ALL, sequence_num)
+Steps_to_do     = ListOfSteps.settings_loader(LOAD_ALL)
 
 test = False 
 for num in for_instances:
@@ -110,14 +109,14 @@ for num in for_instances:
         elif sequences == "5":
             if test: print(INVITE_CODE)
             pyperclip.copy(INVITE_CODE) # for submitting the invite        
-        if sequences != "3":
-            if not test:
-                konkretne_kroki = Parser(Steps_to_do[sequences])
-                konkretne_kroki.execute_steps()
+        if sequences != "3":            
+            konkretne_kroki = Parser(Steps_to_do[sequences])
+            konkretne_kroki.execute_steps(test)
+            
         if not test: time.sleep(2)
 
-subprocess.Popen([MEMUC_EXE, "stop", "-i", "{}".format(emulator_index)]).wait()
-with open(LIST_OF_EMAILS, 'w') as exit_file:
-    for index, lines in enumerate(lines_of_emails):
-         if index >= NUM_OF_INSTACE:
-             exit_file.write(lines)
+    subprocess.Popen([MEMUC_EXE, "stop", "-i", "{}".format(emulator_index)]).wait()
+    with open(LIST_OF_EMAILS, 'w') as exit_file:
+        for index, lines in enumerate(lines_of_emails):
+                if index >= NUM_OF_INSTACE:
+                    exit_file.write(lines)
