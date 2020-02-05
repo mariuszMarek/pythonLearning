@@ -3,7 +3,8 @@ from datetime        import datetime
 from pynput.mouse    import Button, Controller as Mouse_Controller
 from pynput.keyboard import Key, Controller as Keyboard_Controller 
 
-
+#tutaj musze też przebudować prawie że od zera
+#podzielić klasę na mniejsze kawałki by mogły dodatkowo porównywać screenshoty
 class Parser:
     def __init__(self, list_of_steps = []):
         self.list_of_steps_raw      = list_of_steps
