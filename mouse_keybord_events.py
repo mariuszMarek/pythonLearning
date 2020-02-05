@@ -14,7 +14,7 @@ class TypeEvents:
     def on_click(self, x, y, button, pressed):
         self._last_x = x
         self._last_y = y
-        return [x, y, button, pressed]
+        return [button, x, y, pressed]
     def on_release(self, key): 
         if key == self._stop_button:
             print('{0} released, stopping recording'.format(key))
@@ -23,32 +23,28 @@ class TypeEvents:
         if key == self._stop_button:
             print('{0} pressed, stopping recording'.format(key))
             return False
-        return [key, self._last_x, self._last_y]
+        return [key, self._last_x, self._last_y, '']
 
 
 class ControllerEvents(TypeEvents): 
-    def __init__(self, stop_key):
-        super().__init__(keyboard.Key[stop_key])
-        self.position_list      = position_list
-        self.num_of_click       = 0
-        self._SCREENSHOT_SIZE_X = SCREENSHOT_SIZE_X
-        self._SCREENSHOT_SIZE_Y = SCREENSHOT_SIZE_Y
-        self._MOUSE             = "M"
-        self._KEY_PRESS         = "KP"
-        self._KEY_RELEASE       = "KR"
+    def __init__(self, stop_key=keyboard.Key['shift']):
+        super().__init__(stop_key)
+        self.num_of_click = 0
+        self._MOUSE       = "M"
+        self._KEY_PRESS   = "KP"
+        self._KEY_RELEASE = "KR"
         # self.ScreenShots        = MakeScreenshot(self._SCREENSHOT_SIZE_X, self._SCREENSHOT_SIZE_Y, sequence_num)
         
         self.start_recording() # this has to be last
 
     def on_click(self, x, y, button, pressed):
-        results = super().on_click(x, y, button, pressed)        
-        results.append(time.strftime("%H%M%S"))
-        if pressed:
-            self.position_list.append(
-                tuple((x, y, button, self._MOUSE, time_of_click)))
-            self.ScreenShots.make_screensots(
-                x, y, self.num_of_click, time_of_click)
+        if pressed:            
+            results = super().on_click(x, y, button, pressed)        
+            results.append(time.strftime("%H%M%S"))
+            results.append(self.num_of_click)
             self.num_of_click += 1
+            return results
+
 
     def on_release(self, key):  # this is for the future
         time_of_click = time.strftime("%H%M%S")
@@ -74,8 +70,13 @@ class ControllerEvents(TypeEvents):
 
 
 class MouseKeyboard(ControllerEvents):
-    ef __init__(self, stop_key, sequence_num=0, position_list=[], SCREENSHOT_SIZE_X=100, SCREENSHOT_SIZE_Y=100):
+    def __init__(self, stop_key, sequence_num=0, position_list=[], SCREENSHOT_SIZE_X=100, SCREENSHOT_SIZE_Y=100):
         super().__init__(sequence_num)
+        self.position_list.append(
+            tuple((x, y, button, self._MOUSE, time_of_click)))
+        self.ScreenShots.make_screensots(
+            x, y, self.num_of_click, time_of_click)
+        self.num_of_click += 1
     
 
         
