@@ -29,7 +29,6 @@ class TypeEvents:
             return [False]
         return [True,key, self._last_x, self._last_y, self._KEY_PRESS]
 
-
 class ControllerEvents(TypeEvents): 
     def __init__(self, stop_key=keyboard.Key['shift']):
         super().__init__(stop_key)
@@ -37,26 +36,40 @@ class ControllerEvents(TypeEvents):
     def on_click(self, x, y, button, pressed):
         if pressed:            
             results = super().on_click(x, y, button, pressed)            
-            results.append(time.strftime("%H%M%S"), self.num_of_click)            
+            results.append(self.get_time_stamp(), self.order_num())
             self.num_of_click += 1
             return results
     def on_release(self, key):  # this is for the future        
         results = super().on_release(key)
         if not results[0]: return [results[0]]            
-        else : return results.append(self.get_time_stamp())            
+        else : return results.append(self.get_time_stamp(),self.order_num())
     def on_press(self, key):
         results = super().on_press(key)
         if not results[0]: return [results[0]]
-        return results.append(self.get_time_stamp())
+        return results.append(self.get_time_stamp(), self.order_num())
     def get_time_stamp(self):
         return time.strftime("%H%M%S")
+    def order_num(self):        
+        self.num_of_click += 1
+        return self.num_of_click
+
 class MouseKeyboardEvents(ControllerEvents): #tutaj bede nagrywal
-    def __init__(self, stop_key,screen_shot_class, sequence_num=0, events_list=[], SCREENSHOT_SIZE_X=100, SCREENSHOT_SIZE_Y=100):
+    def __init__(self, stop_key,screen_shot_class, sequence_num=0, events_list={}, SCREENSHOT_POSXYWH= [0,0,1920,1080]):
         super().__init__(stop_key)
-        self.ScreenShots = screen_shot_class(SCREENSHOT_SIZE_X, SCREENSHOT_SIZE_Y, sequence_num)
-        # self.ScreenShots        = MakeScreenshot(self._SCREENSHOT_SIZE_X, self._SCREENSHOT_SIZE_Y, sequence_num)
-        super().__init__(sequence_num)        
-        #self.ScreenShots.make_screensots(x, y, self.num_of_click, time_of_click)        
+        self.ScreenShots    = screen_shot_class(SCREENSHOT_POSXYWH, sequence_num)        
+        self._list_of_steps = events_list
+        self._sequence_num  = sequence_num
+    def on_click(self, x, y, button, pressed):
+        results = super().on_click(x,y,button,pressed)        
+        if results[0]:            
+            self.add_do_dictionary(results)
+    def on_press(self,key):
+        results = super().on_press(key)
+        if results[0]:            
+            self.add_do_dictionary(results)
+    def add_do_dictionary(self, results):
+            dict_key = str(results)
+            if dict_key not in self._list_of_steps: self._list_of_steps[dict_key] = results.append(self._sequence_num)
     def start_recording(self):
         with MouseListener(on_click=self.on_click) as listener:
             with KeyboardListener(on_press=self.on_press) as listener:
