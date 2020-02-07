@@ -17,7 +17,7 @@ class TypeEvents:
     def on_click(self, x, y, button, pressed):
         self._last_x = x
         self._last_y = y
-        return [True,button, x, y, pressed, self._MOUSE]
+        if pressed : return[pressed, button, x, y, self._MOUSE]
     def on_release(self, key): 
         if key == self._stop_button:
             print('{0} released, stopping recording'.format(key))
@@ -36,8 +36,7 @@ class ControllerEvents(TypeEvents):
     def on_click(self, x, y, button, pressed):
         if pressed:            
             results = super().on_click(x, y, button, pressed)            
-            results.append(self.get_time_stamp(), self.order_num())
-            self.num_of_click += 1
+            results.append(self.get_time_stamp(), self.order_num())            
             return results
     def on_release(self, key):  # this is for the future        
         results = super().on_release(key)
@@ -56,9 +55,10 @@ class ControllerEvents(TypeEvents):
 class MouseKeyboardEvents(ControllerEvents): #tutaj bede nagrywal
     def __init__(self, stop_key,screen_shot_class, sequence_num=0, events_list={}, SCREENSHOT_POSXYWH= [0,0,1920,1080]):
         super().__init__(stop_key)
-        self.ScreenShots    = screen_shot_class(SCREENSHOT_POSXYWH, sequence_num)        
-        self._list_of_steps = events_list
-        self._sequence_num  = sequence_num
+        self.ScreenShots         = screen_shot_class(sequence_num)        
+        self._list_of_steps      = events_list
+        self._sequence_num       = sequence_num
+        self._SCREENSHOT_POSXYWH = SCREENSHOT_POSXYWH
     def on_click(self, x, y, button, pressed):
         results = super().on_click(x,y,button,pressed)        
         if results[0]:            
@@ -69,18 +69,14 @@ class MouseKeyboardEvents(ControllerEvents): #tutaj bede nagrywal
             self.add_do_dictionary(results)
     def add_do_dictionary(self, results):
             dict_key = str(results)
-            if dict_key not in self._list_of_steps: self._list_of_steps[dict_key] = results.append(self._sequence_num)
+            if dict_key not in self._list_of_steps:
+                print(results)
+                self._list_of_steps[dict_key] = results.append(self._sequence_num)
+                if results[4] == self._MOUSE:
+                    self.ScreenShots.make_screensots(
+                        self._SCREENSHOT_POSXYWH[0], self._SCREENSHOT_POSXYWH[1], self._SCREENSHOT_POSXYWH[3], self._SCREENSHOT_POSXYWH[4], 
+                        results[5], results[6], results[7])
     def start_recording(self):
         with MouseListener(on_click=self.on_click) as listener:
             with KeyboardListener(on_press=self.on_press) as listener:
                 listener.join()
-    
-
-        
-    
-
-        
-    
-                
-
-
