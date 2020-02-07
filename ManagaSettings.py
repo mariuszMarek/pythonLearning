@@ -2,7 +2,7 @@ import copy
 import os, sys
 
 from pathlib import Path
-from mouse_keybord_events import MouseEvents
+from mouse_keybord_events import MouseKeyboardEvents
 
 
 class ManageSettings:    
@@ -17,7 +17,8 @@ class ManageSettings:
     def record_settings(self,sequence=0):        
         self.config_file = self.ini_path + str(sequence) + self.ini_file_name
         self.position_list = []  # need to clear the list
-        #need to overwrite the settings so if we are missing the ini file it will start recording        
+        #need to overwrite the settings so if we are missing the ini file it will start recording      
+        # 3232323232323232323232  
         MouseEvents(sequence, self.position_list)
         if self.position_list:
             self.save_settings(sequence)
