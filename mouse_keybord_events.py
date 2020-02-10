@@ -58,7 +58,7 @@ class MouseKeyboardEvents(ControllerEvents): #this class is responsible for reco
         self.ScreenShots         = screen_shot_class(sequence_num)        
         self._list_of_steps      = events_list
         self._sequence_num       = sequence_num
-        self.start_recording()       
+        self.start_recording()
     def on_click(self, x, y, button, pressed):
         results = super().on_click(x,y,button,pressed)        
         if results[0]:            
