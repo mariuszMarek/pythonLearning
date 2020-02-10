@@ -53,9 +53,9 @@ class ControllerEvents(TypeEvents):
         return self.num_of_click
 
 class MouseKeyboardEvents(ControllerEvents): #this class is responsible for recording and running the "screenshot" class
-    def __init__(self, stop_key,screen_shot_class, sequence_num=0, events_list={}):
+    def __init__(self, screen_shot_class: MakeScreenshot , sequence_num=0, events_list={}, stop_key=keyboard.Key['shift']):
         super().__init__(stop_key)
-        self.ScreenShots         = screen_shot_class(sequence_num)        
+        self.ScreenShots         = screen_shot_class        
         self._list_of_steps      = events_list
         self._sequence_num       = sequence_num
         self.start_recording()
@@ -81,3 +81,8 @@ class MouseKeyboardEvents(ControllerEvents): #this class is responsible for reco
         with MouseListener(on_click=self.on_click) as listener:
             with KeyboardListener(on_press=self.on_press) as listener:
                 listener.join()
+from MakeScreenshot import MakeScreenshot
+steps    = {}
+sequence = 0
+stopKey = keyboard.Key['shift']
+test = MouseKeyboardEvents(MakeScreenshot(),sequence,steps,stopKey)
