@@ -1,3 +1,5 @@
+from win32gui import GetWindowText, GetForegroundWindow
+import win32gui
 import PIL
 import os
 
@@ -91,3 +93,20 @@ class MakeScreenshot:
                 pos_y2 = pos_y + EXPAND_VALUE
                 con_num += ";10"
         return (pos_x1, pos_y1, pos_x2, pos_y2, con_num)
+
+
+# print("#" + GetWindowText(GetForegroundWindow()))
+
+
+# while True:
+#     HWND = GetForegroundWindow()
+#     rect = win32gui.GetWindowRect(HWND)
+#     x = rect[0]
+#     y = rect[1]
+#     w = rect[2] - x
+#     h = rect[3] - y
+#     print("Window %s:" % win32gui.GetWindowText(HWND))
+#     print("test {}".format(HWND))
+#     print("\tLocation: (%d, %d)" % (x, y))
+#     print("\t    Size: (%d, %d)" % (w, h))
+#     time.sleep(5)

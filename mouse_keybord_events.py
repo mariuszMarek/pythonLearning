@@ -45,20 +45,20 @@ class ControllerEvents(TypeEvents):
     def on_press(self, key):
         results = super().on_press(key)
         if not results[0]: return [results[0]]
-        return results.append(self.get_time_stamp(), self.order_num())
+        return results.append(self.get_time_stamp(), self.order_num())        
     def get_time_stamp(self):
         return time.strftime("%H%M%S")
     def order_num(self):        
         self.num_of_click += 1
         return self.num_of_click
 
-class MouseKeyboardEvents(ControllerEvents): #tutaj bede nagrywal
-    def __init__(self, stop_key,screen_shot_class, sequence_num=0, events_list={}, SCREENSHOT_POSXYWH= [0,0,1920,1080]):
+class MouseKeyboardEvents(ControllerEvents): #this class is responsible for recording and running the "screenshot" class
+    def __init__(self, stop_key,screen_shot_class, sequence_num=0, events_list={}):
         super().__init__(stop_key)
         self.ScreenShots         = screen_shot_class(sequence_num)        
         self._list_of_steps      = events_list
         self._sequence_num       = sequence_num
-        self._SCREENSHOT_POSXYWH = SCREENSHOT_POSXYWH
+        self.start_recording()       
     def on_click(self, x, y, button, pressed):
         results = super().on_click(x,y,button,pressed)        
         if results[0]:            
@@ -69,13 +69,14 @@ class MouseKeyboardEvents(ControllerEvents): #tutaj bede nagrywal
             self.add_do_dictionary(results)
     def add_do_dictionary(self, results):
             dict_key = str(results)
+            # 0           1     2    3      4               5          6         7
+            #true/false, key, pos_x,pos_y,pressedName, timestamp, order_num, sequence_num
             if dict_key not in self._list_of_steps:
                 print(results)
                 self._list_of_steps[dict_key] = results.append(self._sequence_num)
                 if results[4] == self._MOUSE:
-                    self.ScreenShots.make_screensots(
-                        self._SCREENSHOT_POSXYWH[0], self._SCREENSHOT_POSXYWH[1], self._SCREENSHOT_POSXYWH[3], self._SCREENSHOT_POSXYWH[4], 
-                        results[5], results[6], results[7])
+                    parameters_for_screenshot = results[2:3:1] + results[5:7:1]                    
+                    self.ScreenShots.make_screensots(parameters_for_screenshot)
     def start_recording(self):
         with MouseListener(on_click=self.on_click) as listener:
             with KeyboardListener(on_press=self.on_press) as listener:
