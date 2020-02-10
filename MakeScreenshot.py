@@ -3,6 +3,27 @@ import win32gui
 import PIL
 import os
 
+# print("#" + GetWindowText(GetForegroundWindow()))
+
+
+# while True:
+#     HWND = GetForegroundWindow()
+#     rect = win32gui.GetWindowRect(HWND)
+#     x = rect[0]
+#     y = rect[1]
+#     w = rect[2] - x
+#     h = rect[3] - y
+#     print("Window %s:" % win32gui.GetWindowText(HWND))
+#     print("test {}".format(HWND))
+#     print("\tLocation: (%d, %d)" % (x, y))
+#     print("\t    Size: (%d, %d)" % (w, h))
+#     time.sleep(5)
+class FindProcess:
+    def __init__(self):
+        pass
+
+
+
 class MakeScreenshot:
     def __init__(self, EXPAND_VALUE, sequence_num):
         self.imageGrab      = PIL.ImageGrab
@@ -27,86 +48,6 @@ class MakeScreenshot:
         temp_image.save(temp_name)
         self.__file_list.append(temp_name)
     def make_bbox(self, pos_x=0, pos_y=0):
-        pos_x1 = pos_x2 = pos_x
-        pos_y1 = pos_y2 = pos_y
-        con_num       = "0" # for debuging
-        EXPAND_VALUE  = self.__EXPAND_VALUE
-        MIN_X         = MIN_Y = 0
-        MAX_X         = self.__MAX_X
-        MAX_Y         = self.__MAX_Y
-        #bottom right corner
-        if (pos_x >= (MAX_X-EXPAND_VALUE) and pos_y >= (MAX_Y-EXPAND_VALUE)):
-            pos_x1 = MAX_X - EXPAND_VALUE
-            pos_y1 = MAX_Y - EXPAND_VALUE
-            con_num += ";1"            
-        # bottom left corner
-        elif (pos_x <= (MIN_X+EXPAND_VALUE) and pos_y >= (MAX_Y-EXPAND_VALUE)):
-            pos_x2 = pos_x + EXPAND_VALUE
-            pos_y1 = pos_y - EXPAND_VALUE
-            con_num += ";2"
-        # upper left corner
-        elif (pos_x <= (MIN_X+EXPAND_VALUE) and pos_y <= (MIN_Y+EXPAND_VALUE)):
-            pos_x1 = MIN_X
-            pos_y1 = MIN_Y
-            pos_x2 = pos_x + EXPAND_VALUE
-            pos_y2 = pos_y + EXPAND_VALUE
-            con_num += ";3"
-        # upper right corner
-        elif (pos_x >= (MAX_X-EXPAND_VALUE ) and pos_y <= (MIN_Y+EXPAND_VALUE)):
-            pos_x1 = MAX_X - EXPAND_VALUE
-            pos_y1 = MIN_Y
-            pos_x2 = MAX_X
-            pos_y2 = pos_y + EXPAND_VALUE
-            con_num += ";4"        
-        else:
-            #not near edges and corners
-            pos_x1 = pos_x - EXPAND_VALUE
-            pos_y1 = pos_y - EXPAND_VALUE
-            pos_x2 = pos_x + EXPAND_VALUE
-            pos_y2 = pos_y + EXPAND_VALUE
-            # if edges then overwrite some values
-            # bottom edge
-            if (pos_y >= (MAX_Y-EXPAND_VALUE)): 
-                if(pos_y >= MAX_Y):
-                    pos_y1 = MAX_Y - EXPAND_VALUE
-                    pos_y2 = MAX_Y
-                    con_num += ";5"
-                else:
-                    pos_y1 = pos_y - EXPAND_VALUE
-                    pos_y2 = pos_y + (MAX_Y-pos_y)
-                    con_num += ";6"
-            # right edge
-            elif (pos_x >= (MAX_X-EXPAND_VALUE)):
-                if(pos_x >= MAX_X):
-                    pos_x2 = MAX_X
-                    con_num += ";7"
-                else:
-                    pos_x2 = pos_x + (MAX_X-pos_x)
-                    con_num += ";8"
-            # left edged
-            elif (pos_x <= (MIN_X+EXPAND_VALUE)):
-                pos_x1 = pos_x
-                con_num += ";9"
-            # upper edge
-            elif (pos_y <= (MIN_Y+EXPAND_VALUE)):
-                pos_y1 = MIN_Y
-                pos_y2 = pos_y + EXPAND_VALUE
-                con_num += ";10"
         return (pos_x1, pos_y1, pos_x2, pos_y2, con_num)
 
 
-# print("#" + GetWindowText(GetForegroundWindow()))
-
-
-# while True:
-#     HWND = GetForegroundWindow()
-#     rect = win32gui.GetWindowRect(HWND)
-#     x = rect[0]
-#     y = rect[1]
-#     w = rect[2] - x
-#     h = rect[3] - y
-#     print("Window %s:" % win32gui.GetWindowText(HWND))
-#     print("test {}".format(HWND))
-#     print("\tLocation: (%d, %d)" % (x, y))
-#     print("\t    Size: (%d, %d)" % (w, h))
-#     time.sleep(5)
