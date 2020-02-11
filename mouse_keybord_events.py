@@ -86,13 +86,8 @@ class MouseKeyboardEvents(ControllerEvents): #this class is responsible for reco
                 if results[4] == self._MOUSE:                
                     parameters_for_screenshot = results[5:8:1]
                     self.ScreenShots.make_screensots(parameters_for_screenshot)
+                    print (parameters_for_screenshot)
     def start_recording(self):
         with MouseListener(on_click=self.on_click) as listener:
             with KeyboardListener(on_press=self.on_press) as listener:
                 listener.join()
-from MakeScreenshot import MakeScreenshot
-steps    = {}
-sequence = 0
-stopKey = keyboard.Key['shift']
-print ("start test")
-test = MouseKeyboardEvents(MakeScreenshot(),sequence,steps,stopKey)
