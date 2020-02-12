@@ -86,7 +86,7 @@ class MouseKeyboardEvents(ControllerEvents): #this class is responsible for reco
                 if results[4] == self._MOUSE:                
                     parameters_for_screenshot = results[5:8:1]
                     self.ScreenShots.make_screensots(parameters_for_screenshot)
-                    print (parameters_for_screenshot)
+                    results += parameters_for_screenshot
     def start_recording(self):
         with MouseListener(on_click=self.on_click) as listener:
             with KeyboardListener(on_press=self.on_press) as listener:
