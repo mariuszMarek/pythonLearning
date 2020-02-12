@@ -45,4 +45,4 @@ class MakeScreenshot(ProcessFinder):
         temp_image    = self._imageGrab.grab(bbox =( my_bbox ))        
         temp_name     = "{}_{}_{}_{}_screenshot.png".format( sequence_num, order_num, time_stamp, self._proc_meta_data[0])
         temp_image.save(dirImage + temp_name)
-        parameters.append(self._proc_meta_data)
+        parameters += self._proc_meta_data
