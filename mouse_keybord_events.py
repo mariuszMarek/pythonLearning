@@ -12,8 +12,7 @@ class TypeEvents:
         self._KEY_RELEASE = "KR"
         self._stop_button = stop_button
         self._last_x      = 0.0
-        self._last_y      = 0.0
-        pass
+        self._last_y      = 0.0        
     def on_click(self, x, y, button, pressed):
         self._last_x = x
         self._last_y = y
