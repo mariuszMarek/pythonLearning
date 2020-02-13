@@ -1,25 +1,25 @@
 import copy
 import os, sys
-
+from pynput import keyboard
 from pathlib import Path
-from mouse_keybord_events import MouseKeyboardEvents
 
+from mouse_keybord_events import MouseKeyboardEvents
+from MakeScreenshot import MakeScreenshot
 
 class ManageSettings:    
     def __init__(self,config_path = ".\\settings\\"):        
         self.ini_path        = config_path # sciezka gdzie bedzie zapisany plik z ustawieniami, ciekawe czy tak mozna
         self.ini_file_name   = "_position_settings.ini"
         self.config_file     = ""
-        self.__position_list = []
+        self._position_list   = {}
         path_to_save         = Path(config_path)
         path_to_save.mkdir(exist_ok=True)
 
-    def record_settings(self,sequence=0):        
-        self.config_file = self.ini_path + str(sequence) + self.ini_file_name
-        self.position_list = []  # need to clear the list
-        #need to overwrite the settings so if we are missing the ini file it will start recording      
-        # 3232323232323232323232  
-        MouseEvents(sequence, self.position_list)
+    def record_settings(self,sequence=0,stop_key=keyboard.Key['shift']):
+        self.config_file   = self.ini_path + str(sequence) + self.ini_file_name
+        self.position_list = {}  # need to clear the list
+        #need to overwrite the settings so if we are missing the ini file it will start recording              
+        MouseKeyboardEvents(MakeScreenshot(),sequence, self.position_list,stop_key)
         if self.position_list:
             self.save_settings(sequence)
             return self.position_list
@@ -32,9 +32,9 @@ class ManageSettings:
 
     def save_settings(self, sequence = 0):        
         with open(self.config_file, 'w') as file_writter:
-            for posXY in self.position_list:
-                file_writter.write("{};{};{};{};{};{}\n".format(
-                    sequence, posXY[0], posXY[1], posXY[2], posXY[3], posXY[4]))
+            for multipleElements in self.position_list:                
+                joined_line      = ";".join(map(str,self.position_list[multipleElements][0]))                
+                file_writter.write("{}\n".format(joined_line))
 
     def load_settings(self, return_all_or_one = False, return_sequence = 0):        
         sequence_dict = {}
@@ -42,23 +42,23 @@ class ManageSettings:
             if(files.endswith(".ini")):                
                 with open(self.ini_path + files, 'r') as file_reader:                        
                     for line_XY in file_reader:                        
-                        sequence, posX, posY, eventValue, eventType, date_time = line_XY.strip().split(";")
-                        XYposList = [posX, posY, eventType,eventValue, date_time]                        
-                        if not sequence in sequence_dict:                                                
-                            sequence_dict[sequence] = [XYposList]
-                        else:                                    
-                            sequence_dict[sequence].append(XYposList)                                                                                                 
+                        elements_line = line_XY.strip().replace("[","").replace("]","").replace("'","").split(",")
+                        sequence_num  = elements_line[7]
+                        print(sequence_num)
+                        sequence_dict[sequence_num] = [elements_line] if not elements_line[sequence_num] in sequence_dict else sequence_dict[sequence_num].append(elements_line)                                                                                                 
         if return_all_or_one: return sequence_dict
         return sequence_dict[str(return_sequence)] if str(return_sequence) in sequence_dict else ["missing given sequence for num",return_sequence]
     @property
     def position_list(self):
-        return self.__position_list
+        return self._position_list
     @position_list.setter
     def position_list(self, position_list):
-        self.__position_list = position_list
-
+        self._position_list = position_list
     
-
-# testKlas = ManageSettings(False)
-# for posXY in testKlas.save_or_load(0):
+testKlas = ManageSettings()
+print("start recording")
+testKlas.record_settings()
+print("end recording")
+# testKlas.load_settings()
+# for posXY in testKlas.position_list:
 #     print(posXY)
