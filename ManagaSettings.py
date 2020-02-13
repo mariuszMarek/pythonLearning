@@ -22,7 +22,7 @@ class ManageSettings:
         MouseKeyboardEvents(MakeScreenshot(),sequence, self.position_list,stop_key)
         if self.position_list:
             self.save_settings(sequence)
-            return self.position_list
+            # return self.position_list # do I need this?
 
     def settings_loader(self, load_all_or_one=False, sequence=0):
         #potrzebuje zerowanie listy
