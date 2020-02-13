@@ -11,7 +11,7 @@ class ManageSettings:
         self.ini_path        = config_path # sciezka gdzie bedzie zapisany plik z ustawieniami, ciekawe czy tak mozna
         self.ini_file_name   = "_position_settings.ini"
         self.config_file     = ""
-        self._position_list   = {}
+        self.position_list   = {}
         path_to_save         = Path(config_path)
         path_to_save.mkdir(exist_ok=True)
 
@@ -36,29 +36,17 @@ class ManageSettings:
                 joined_line      = ";".join(map(str,self.position_list[multipleElements][0]))                
                 file_writter.write("{}\n".format(joined_line))
 
-    def load_settings(self, return_all_or_one = False, return_sequence = 0):        
+    def load_settings(self, return_all_or_one = False, return_sequence = 0):
         sequence_dict = {}
-        for files in reversed(os.listdir(self.ini_path)):            
-            if(files.endswith(".ini")):                
-                with open(self.ini_path + files, 'r') as file_reader:                        
-                    for line_XY in file_reader:                        
-                        elements_line = line_XY.strip().replace("[","").replace("]","").replace("'","").split(",")
-                        sequence_num  = elements_line[7]
-                        print(sequence_num)
-                        sequence_dict[sequence_num] = [elements_line] if not elements_line[sequence_num] in sequence_dict else sequence_dict[sequence_num].append(elements_line)                                                                                                 
-        if return_all_or_one: return sequence_dict
+        for files in reversed(os.listdir(self.ini_path)):
+            if(files.endswith(".ini")):
+                with open(self.ini_path + files, 'r') as file_reader:
+                    for line_XY in file_reader:
+                        elements_line = line_XY.strip().split(";")
+                        sequence_num  = elements_line[7]                        
+                        if not sequence_num in sequence_dict:
+                            sequence_dict[sequence_num] = [elements_line] 
+                        else:
+                            sequence_dict[sequence_num].append(elements_line)
+        if return_all_or_one: return sequence_dict        
         return sequence_dict[str(return_sequence)] if str(return_sequence) in sequence_dict else ["missing given sequence for num",return_sequence]
-    @property
-    def position_list(self):
-        return self._position_list
-    @position_list.setter
-    def position_list(self, position_list):
-        self._position_list = position_list
-    
-testKlas = ManageSettings()
-print("start recording")
-testKlas.record_settings()
-print("end recording")
-# testKlas.load_settings()
-# for posXY in testKlas.position_list:
-#     print(posXY)
