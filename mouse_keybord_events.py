@@ -76,15 +76,16 @@ class MouseKeyboardEvents(ControllerEvents): #this class is responsible for reco
             self.add_do_dictionary(results)
         else : return results
     def add_do_dictionary(self, results):
-            dict_key = str(results[1:5:1])            
+            dict_key = str(results[1:5:1])
+            if results[4] != self._MOUSE: dict_key = str(results[1:6:1])
             # 0           1     2    3      4               5          6         7
             #true/false, key, pos_x,pos_y,pressedName, timestamp, order_num, sequence_num
             if dict_key not in self._list_of_steps:
-                results.append(self._sequence_num)                
-                if results[4] == self._MOUSE:                
+                results.append(self._sequence_num)
+                if results[4] == self._MOUSE:
                     parameters_for_screenshot = results[5:8:1]
                     self.ScreenShots.make_screensots(parameters_for_screenshot)
-                    results += parameters_for_screenshot                
+                    results += parameters_for_screenshot
                 self._list_of_steps[dict_key] = [results]
     def start_recording(self):
         with MouseListener(on_click=self.on_click) as listener:
