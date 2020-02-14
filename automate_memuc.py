@@ -14,7 +14,7 @@ from StepParser import Parser
 prep_cmd()  # to raczej potrzebne do glownego programu, ten plik bedzie podprogramem
 
 #most of those should be taken from the parser
-NUM_OF_INSTACE      = 3
+NUM_OF_INSTACE      = 1
 MEMUC_EXE           = 'F:\\Program Files\\memu\\MEmu\\memuc.exe'
 QUINDAN_APP         = "F:\\memu\\base.apk"
 INVITE_CODE         = "il6MzssI"
@@ -23,10 +23,12 @@ LIST_OF_EMAILS      = "F:\\memu\\listOfMyEmails.txt"
 EMAIL_FROM          = "Webnovel <noreply@webnovel.com>"
 WINDOW_NAME         = "Memu"
 SUBJECT_TO_FIND     = "Activate your Webnovel account"
-MAX_NUM_OF_TRIES    = 5
 HARDCODED_PASS      = "PythonAutomate12#"  # bedzie brane z parametru
 PROGRAM_NAME        = "Webnovel"
 LOAD_ALL            = True
+
+test                = True 
+LOAD_ALL            = not test
 
 ListOfSteps     = ManageSettings()
 lines_of_emails = open(LIST_OF_EMAILS, 'r').readlines()
@@ -34,7 +36,7 @@ email_parser    = ParsEmail()
 for_instances   = list(range(0, NUM_OF_INSTACE))
 Steps_to_do     = ListOfSteps.settings_loader(LOAD_ALL)
 
-test = False 
+
 for num in for_instances:
     successfull_email    = True
     email_to_use         = lines_of_emails[num].strip()
@@ -66,24 +68,30 @@ for num in for_instances:
         print("Wait 1 min for program to start")
         time.sleep(50)
     # odczytuje od ostatniego pliku
+    if not test: print(Steps_to_do)
     for sequences in reversed(Steps_to_do):
-        if test: print(sequences) 
-        if test: print(Steps_to_do[sequences]) 
+        if test: print("sequences")
+        if test: print(sequences)
+        if test: print("Steps_to_do[sequences]") 
+        if LOAD_ALL: konkretne_kroki = Parser(Steps_to_do[sequences]) 
+        else:        konkretne_kroki = Parser(Steps_to_do)
+        if test:
+            print(Steps_to_do[sequences]) if LOAD_ALL else print(Steps_to_do)
+
         if sequences == "0":
             if test: print(email_to_use)
-            pyperclip.copy(email_to_use)   # for logi into google play                                
+            pyperclip.copy(email_to_use)   # for logi into google play
         elif sequences == "1":
             if test: print(HARDCODED_PASS)
-            pyperclip.copy(HARDCODED_PASS) # for password into google play                        
+            pyperclip.copy(HARDCODED_PASS) # for password into google play
         elif sequences == "2":
-            if test: print(PROGRAM_NAME)            
-            pyperclip.copy(PROGRAM_NAME)   # for looking the webnovel on google play        
-        elif sequences == "3":            
+            if test: print(PROGRAM_NAME)
+            pyperclip.copy(PROGRAM_NAME)   # for looking the webnovel on google play
+        elif sequences == "3":
             if test: print(email_to_use)
-            pyperclip.copy(email_to_use)   # for account creation in webnovel        
+            pyperclip.copy(email_to_use)   # for account creation in webnovel
             if not test:
-                konkretne_kroki = Parser(Steps_to_do[sequences])
-                konkretne_kroki.execute_steps()
+                konkretne_kroki.execute_steps(test)
                 print("wating for email with passcode")
                 while not passcode:
                     try:
@@ -105,14 +113,12 @@ for num in for_instances:
                         print("wating for email with passcode")
         elif sequences == "4":
             if test: print("passcode-> " + passcode)
-            pyperclip.copy(passcode)    # copy the passcode from email to the clippboard                
+            pyperclip.copy(passcode)    # copy the passcode from email to the clippboard
         elif sequences == "5":
             if test: print(INVITE_CODE)
-            pyperclip.copy(INVITE_CODE) # for submitting the invite        
-        if sequences != "3":            
-            konkretne_kroki = Parser(Steps_to_do[sequences])
+            pyperclip.copy(INVITE_CODE) # for submitting the invite
+        if sequences != "3":
             konkretne_kroki.execute_steps(test)
-            
         if not test: time.sleep(2)
 
     subprocess.Popen([MEMUC_EXE, "stop", "-i", "{}".format(emulator_index)]).wait()
