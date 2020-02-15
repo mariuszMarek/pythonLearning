@@ -25,9 +25,7 @@ class TypeEvents(KeysDef):
             print('{0} released, stopping recording'.format(key))
             return False
         return [True,key, self._last_x, self._last_y, self._KEY_RELEASE]
-    def on_press(self, key):                        
-        print('{0} pressed key value'.format(key))
-        print('{0} pressed stop key value'.format(self._stop_button))
+    def on_press(self, key):                                
         if key == self._stop_button:
             print('{0} pressed, stopping recording'.format(key))
             return False
