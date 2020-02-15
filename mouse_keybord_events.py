@@ -5,11 +5,13 @@ from pynput import mouse
 from pynput import keyboard
 import time
 
-class TypeEvents:
-    def __init__(self, stop_button = keyboard.Key['shift']):
+class KeysDef:
+    def __init__(self):
         self._MOUSE       = "M"
         self._KEY_PRESS   = "KP"
         self._KEY_RELEASE = "KR"
+class TypeEvents(KeysDef):
+    def __init__(self, stop_button = keyboard.Key['shift']):
         self._stop_button = stop_button
         self._last_x      = 0.0
         self._last_y      = 0.0        
