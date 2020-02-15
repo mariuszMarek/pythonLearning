@@ -35,7 +35,7 @@ email_parser     = ParsEmail()
 for_instances    = list(range(0, NUM_OF_INSTACE))
 frequency        = 3500  # Set Frequency To 2500 Hertz
 duration         = 500  # Set Duration To 1000 ms == 1 second
-
+stop_button      = "alt_l"
 
 for num in for_instances:
     print("star the memuc emulator")
@@ -62,30 +62,30 @@ for num in for_instances:
     except :
         pass    
     print("Wait 50 s for program to start") 
-    # time.sleep(50)
+    time.sleep(50)
     winsound.Beep(frequency, duration)
     print("wczyta teraz emaila do uzycia {}".format(email_to_use))
     pyperclip.copy(email_to_use)
     if RecordStep : print('start recording steps') # dodac to do klasy manageSetings
-    ListOfSteps.record_settings(sequence_num,"alt_l")
+    ListOfSteps.record_settings(sequence_num,stop_button)
     
 
     print("zapisalo pierwszy krok, teraz wczyta haslo do googla do schowka")
     pyperclip.copy(HARDCODED_PASS)
     sequence_num += 1
-    ListOfSteps.record_settings(sequence_num,'`')
+    ListOfSteps.record_settings(sequence_num,stop_button)
     
     # omijaj pierwsza instancje jako że nagrywają się kroki wczesniej. Generalnie zrobie to specjalna klasa ktora to ogarnie, bedzie wygladalo to lepiej bo aktualnie to chujowo    
 
     print("zapisalo kolejny krok, teraz skopiuje webnowel do schowka")
     pyperclip.copy(PROGRAM_NAME)
     sequence_num += 1
-    ListOfSteps.record_settings(sequence_num,'`')
+    ListOfSteps.record_settings(sequence_num,stop_button)
     
     print("zapisalo kojeny krok, teraz wklei emaila do schowka")
     pyperclip.copy(email_to_use)
     sequence_num += 1
-    ListOfSteps.record_settings(sequence_num,'`')
+    ListOfSteps.record_settings(sequence_num,stop_button)
     
 
     print ("wating for email with passcode")           
@@ -107,12 +107,12 @@ for num in for_instances:
     print ("recived passcode {}, start recording new instruction".format(passcode))
     pyperclip.copy(passcode) # copy the passcode from email to the clippboard            
     sequence_num += 1
-    ListOfSteps.record_settings(sequence_num,'`') # po wklejonym kodzie zapraszajacym jeszcze trzeba ogarnac wklejenie zaproszenai
+    ListOfSteps.record_settings(sequence_num,stop_button) # po wklejonym kodzie zapraszajacym jeszcze trzeba ogarnac wklejenie zaproszenai
     
     pyperclip.copy(INVITE_CODE)
     print("teraz kod zaprosenia do wklejenie")
     sequence_num += 1
-    ListOfSteps.record_settings(sequence_num,'`') # po wklejonym kodzie zapraszajacym jeszcze trzeba ogarnac wklejenie zaproszenai
+    ListOfSteps.record_settings(sequence_num,stop_button) # po wklejonym kodzie zapraszajacym jeszcze trzeba ogarnac wklejenie zaproszenai
     
 
 
