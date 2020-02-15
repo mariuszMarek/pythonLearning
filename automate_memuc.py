@@ -73,10 +73,10 @@ for num in for_instances:
         if test: print("sequences")
         if test: print(sequences)
         if test: print("Steps_to_do[sequences]") 
-        if LOAD_ALL: konkretne_kroki = Parser(Steps_to_do[sequences]) 
-        else:        konkretne_kroki = Parser(Steps_to_do)
         if test:
             print(Steps_to_do[sequences]) if LOAD_ALL else print(Steps_to_do)
+        if LOAD_ALL: konkretne_kroki = Parser(Steps_to_do[sequences]) 
+        else:        konkretne_kroki = Parser(Steps_to_do)
 
         if sequences == "0":
             if test: print(email_to_use)
@@ -118,6 +118,7 @@ for num in for_instances:
             if test: print(INVITE_CODE)
             pyperclip.copy(INVITE_CODE) # for submitting the invite
         if sequences != "3":
+            if test: print("konkretne_kroki.execute_steps(test)")
             konkretne_kroki.execute_steps(test)
         if not test: time.sleep(2)
 
