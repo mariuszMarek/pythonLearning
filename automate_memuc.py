@@ -65,10 +65,10 @@ for num in for_instances:
         Whandle = win32gui.FindWindow(None, WINDOW_NAME)
         # na wrazie czego, tutaj chyba trzeba try: catch jak chińskie gówno się włączy
         win32gui.SetForegroundWindow(Whandle)
-        print("Wait 1 min for program to start")
+        print("Wait 50s for program to start")
         time.sleep(50)
     # odczytuje od ostatniego pliku
-    if not test: print(Steps_to_do)
+    if test: print(Steps_to_do)
     for sequences in reversed(Steps_to_do):
         if test: print("sequences")
         if test: print(sequences)

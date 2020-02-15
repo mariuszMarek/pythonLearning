@@ -30,9 +30,9 @@ class ParsKeyboarMouse(KeysDef):
             if self._MOUSE == type_of_step:
                 if print_debug: print("step pars_mouse")
                 if print_debug: print(steps)
-                mouse_button = steps[2]                
+                mouse_button = steps[1]                
                 mouse_button = mouse_button.replace("Button.", "")
-                steps[2]     = mouse_button
+                steps[1]     = mouse_button
                 self.list_of_steps_mouse[index] = [steps]
 
 class FormatSteps(ParsKeyboarMouse):
@@ -101,9 +101,10 @@ class Parser(ExecuteEvents):
                     print (delta_time.total_seconds() + self._EXTRA_TIME)
                     print (identifier)            
             if not print_debug:
-                if event_type == self._MOUSE:                
+                print (x_pos + ";" + y_pos + ";" + function_key)
+                if event_type == self._MOUSE:
                     self.handel_mouse(x_pos,y_pos,function_key)
-                if event_type == self._KEY_PRESS:                                                
+                if event_type == self._KEY_PRESS:
                     if len(function_key) > 1:
                         old_key = function_key
                         was_control_button = True
