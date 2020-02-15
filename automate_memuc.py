@@ -27,7 +27,7 @@ HARDCODED_PASS      = "PythonAutomate12#"  # bedzie brane z parametru
 PROGRAM_NAME        = "Webnovel"
 LOAD_ALL            = True
 
-test                = True 
+test                = False 
 LOAD_ALL            = not test
 
 ListOfSteps     = ManageSettings()
