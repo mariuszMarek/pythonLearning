@@ -15,7 +15,12 @@ class ManageSettings:
         path_to_save         = Path(config_path)
         path_to_save.mkdir(exist_ok=True)
 
-    def record_settings(self,sequence=0,stop_key=keyboard.Key['shift']):
+    def record_settings(self,sequence=0,stop_key = keyboard.Key['shift']):
+        if stop_key != keyboard.Key['shift']:
+            try:
+                if len(stop_key) > 1: stop_key = keyboard.Key[stop_key]
+            except:                
+                pass
         self.config_file   = self.ini_path + str(sequence) + self.ini_file_name
         self.position_list = {}  # need to clear the list
         #need to overwrite the settings so if we are missing the ini file it will start recording              
