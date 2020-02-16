@@ -63,3 +63,4 @@ log.txt
 *.json
 *.json
 test.py
+*.code-workspace
