@@ -101,11 +101,11 @@ class Parser(ExecuteEvents):
                     print (delta_time.total_seconds() + self._EXTRA_TIME)
                     print (identifier)            
             if not print_debug:
-                print (x_pos + ";" + y_pos + ";" + function_key)
                 if event_type == self._MOUSE:
                     self.handel_mouse(x_pos,y_pos,function_key)
                 if event_type == self._KEY_PRESS:
-                    if len(function_key) > 1:
+                    print (x_pos + ";" + y_pos + ";" + function_key)
+                    if len(function_key) > 3:
                         old_key = function_key
                         was_control_button = True
                         continue
