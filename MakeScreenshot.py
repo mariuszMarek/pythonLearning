@@ -34,19 +34,25 @@ class ProcessFinder(RootLocation):
 class MakeScreenshot(ProcessFinder):
     def __init__(self, root_location = ".\\images"):
         super().__init__()
-        root_location = self._script_location if root_location != ".\\settings\\" else root_location
+        root_location = self._script_location if root_location == ".\\settings\\" else root_location
         self._imageGrab     = ImageGrab # for screenshots
         self._file_list     = []
         self._root_location = root_location
-    def make_screensots(self, parameters):  
+    def make_screensots(self, parameters,save_image = 1):
         super().update_window_info()
         time_stamp, order_num, sequence_num = parameters    
+        
         dirImage  = self._root_location + "\\{}\\".format(sequence_num)
+        temp_name = "{}_{}_{}_{}_screenshot.png".format( sequence_num, order_num, time_stamp, self._proc_meta_data[0])
+
         if not os.path.exists(dirImage): # always check just in case
-            os.mkdir(dirImage)
-        my_bbox       = self._window_rect
-        temp_image    = self._imageGrab.grab(bbox =( my_bbox ))        
-        temp_name     = "{}_{}_{}_{}_screenshot.png".format( sequence_num, order_num, time_stamp, self._proc_meta_data[0])
-        temp_image.save(dirImage + temp_name)
+            os.mkdir(dirImage)        
+
+        if save_image == 1 : 
+            self.save_image(dirImage + temp_name, self.grab_image())
         parameters.clear()
         parameters += self._proc_meta_data
+    def grab_image(self):
+        return self._imageGrab.grab(bbox =( self._window_rect ))
+    def save_image(self,image_location, temp_image):
+        temp_image.save(image_location)
