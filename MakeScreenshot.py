@@ -4,8 +4,10 @@ import psutil
 import os
 import re
 from PIL import Image, ImageGrab 
-class ProcessFinder:
+from root_files_to_save import RootLocation
+class ProcessFinder(RootLocation):
     def __init__(self):
+        super().__init__()
         self._HWND           = win32gui.GetForegroundWindow()
         self._window_rect    = win32gui.GetWindowRect(self._HWND)
         self._window_name    = win32gui.GetWindowText(self._HWND)
@@ -31,7 +33,8 @@ class ProcessFinder:
             return False                    
 class MakeScreenshot(ProcessFinder):
     def __init__(self, root_location = ".\\images"):
-        super().__init__()        
+        super().__init__()
+        root_location = self._script_location if root_location != ".\\settings\\" else root_location
         self._imageGrab     = ImageGrab # for screenshots
         self._file_list     = []
         self._root_location = root_location

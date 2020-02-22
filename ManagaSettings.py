@@ -2,12 +2,14 @@ import copy
 import os, sys
 from pynput import keyboard
 from pathlib import Path
-
+from root_files_to_save import RootLocation
 from mouse_keybord_events import MouseKeyboardEvents
 from MakeScreenshot import MakeScreenshot
 
-class ManageSettings:    
-    def __init__(self,config_path = ".\\settings\\"):        
+class ManageSettings(RootLocation):
+    def __init__(self,config_path = ".\\settings\\"):
+        super().__init__()
+        config_path = self._script_location if config_path != ".\\settings\\" else config_path
         self.ini_path        = config_path # sciezka gdzie bedzie zapisany plik z ustawieniami, ciekawe czy tak mozna
         self.ini_file_name   = "_position_settings.ini"
         self.config_file     = ""
