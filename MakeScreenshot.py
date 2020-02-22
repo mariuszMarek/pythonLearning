@@ -37,7 +37,7 @@ class MakeScreenshot(ProcessFinder):
         root_location = self._script_location if root_location == ".\\settings\\" else root_location
         self._imageGrab     = ImageGrab # for screenshots
         self._file_list     = []
-        self._root_location = root_location
+        self._root_location = str(root_location)
     def make_screensots(self, parameters,save_image = 1):
         super().update_window_info()
         time_stamp, order_num, sequence_num = parameters    
