@@ -9,8 +9,8 @@ from MakeScreenshot import MakeScreenshot
 class ManageSettings(RootLocation):
     def __init__(self,config_path = ".\\settings\\"):
         super().__init__()
-        config_path = self._script_location + "\\settings\\" if config_path == ".\\settings\\" else config_path + "\\settings\\"
-        self.ini_path        = str(config_path) # sciezka gdzie bedzie zapisany plik z ustawieniami, ciekawe czy tak mozna
+        config_path = str(self._script_location) + "\\settings\\" if config_path == ".\\settings\\" else config_path + "\\settings\\"
+        self.ini_path        = config_path # sciezka gdzie bedzie zapisany plik z ustawieniami, ciekawe czy tak mozna
         self.ini_file_name   = "_position_settings.ini"
         self.config_file     = ""
         self.position_list   = {}

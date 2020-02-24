@@ -34,10 +34,10 @@ class ProcessFinder(RootLocation):
 class MakeScreenshot(ProcessFinder):
     def __init__(self, root_location = ".\\images\\"):
         super().__init__()
-        root_location = self._script_location + "\\images\\" if root_location == ".\\images\\" else root_location + "\\images\\"
+        root_location = str(self._script_location) + "\\images\\" if root_location == ".\\images\\" else root_location + "\\images\\"
         self._imageGrab     = ImageGrab # for screenshots
         self._file_list     = []
-        self._root_location = str(root_location)
+        self._root_location = root_location
     def make_screensots(self, parameters = [],save_image = 1):
         super().update_window_info()
         if save_image == 1 : 
