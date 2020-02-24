@@ -30,7 +30,7 @@ class ProcessFinder(RootLocation):
                 self._proc_meta_data.append( self._window_name )
         except NameError as error_short:
             print(error_short)
-            return False                    
+            return False
 class MakeScreenshot(ProcessFinder):
     def __init__(self, root_location = ".\\images"):
         super().__init__()
@@ -38,18 +38,16 @@ class MakeScreenshot(ProcessFinder):
         self._imageGrab     = ImageGrab # for screenshots
         self._file_list     = []
         self._root_location = str(root_location)
-    def make_screensots(self, parameters,save_image = 1):
-        super().update_window_info()
-        time_stamp, order_num, sequence_num = parameters    
-        
-        dirImage  = self._root_location + "\\{}\\".format(sequence_num)
-        temp_name = "{}_{}_{}_{}_screenshot.png".format( sequence_num, order_num, time_stamp, self._proc_meta_data[0])
-
-        if not os.path.exists(dirImage): # always check just in case
-            os.mkdir(dirImage)        
-
+    def make_screensots(self, parameters = [],save_image = 1):
+        super().update_window_info()        
         if save_image == 1 : 
+            time_stamp, order_num, sequence_num = parameters
+            dirImage  = self._root_location + "\\{}\\".format(sequence_num)
+            temp_name = "{}_{}_{}_{}_screenshot.png".format( sequence_num, order_num, time_stamp, self._proc_meta_data[0])
+            if not os.path.exists(dirImage): # always check just in case
+                os.mkdir(dirImage)
             self.save_image(dirImage + temp_name, self.grab_image())
+        else: return self.grab_image()
         parameters.clear()
         parameters += self._proc_meta_data
     def grab_image(self):

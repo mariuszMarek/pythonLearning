@@ -73,7 +73,7 @@ class ExecuteEvents(FormatSteps):
         else: 
             self._KEYBOARD_CONTROLLER.press(function_key)            
 
-class Parser(ExecuteEvents):
+class ExecuteSteps(ExecuteEvents):
     def __init__(self, list_of_steps = [], extra_time = 2):
         super().__init__(list_of_steps)                 
         self.remove_redundancy = {}                
@@ -82,8 +82,7 @@ class Parser(ExecuteEvents):
         self.format_steps(print_debug)
         old_time           = datetime.today
         current_step_time  = old_time
-        self.old_key       = ""
-        
+        self.old_key       = ""        
         for numberOfStep in self.list_of_steps_formated:
             if print_debug : 
                 print("self.list_of_steps_formated")
@@ -93,7 +92,7 @@ class Parser(ExecuteEvents):
             _, function_key, x_pos,y_pos, event_type, time_taken, *_  = numberOfStep[0]            
             self.check_time(current_step_time, old_time, print_debug) # make a time before executing the next step?
             current_step_time = datetime.strptime(time_taken, "%H%M%S")            
-            if not print_debug: 
+            if not print_debug:
                 if self.event_decider(event_type,function_key, x_pos,y_pos) : continue
             old_time = current_step_time
     def event_decider(self,event_type,function_key, x_pos,y_pos):
@@ -116,3 +115,32 @@ class Parser(ExecuteEvents):
                 if print_debug :
                     print (delta_time.total_seconds() + self._EXTRA_TIME)
                     print (identifier)
+class Parser(ExecuteSteps):
+    def __init__(self,MakeScreenshot, list_of_steps = [], extra_time = 2):
+        super().__init__(list_of_steps, extra_time)
+        self._ScreenshotClass = MakeScreenshot
+    def execute_steps (self, print_debug = False):
+        self.format_steps(print_debug)
+        old_time           = datetime.today
+        current_step_time  = old_time
+        self.old_key       = ""        
+        for numberOfStep in self.list_of_steps_formated:
+            if print_debug : 
+                print("self.list_of_steps_formated")
+                print(self.list_of_steps_formated)
+                print("numberOfStep")
+                print(numberOfStep[0])
+            _, function_key, x_pos,y_pos, event_type, time_taken, *_  = numberOfStep[0]            
+            self.check_time(current_step_time, old_time, print_debug) # make a time before executing the next step?
+            current_step_time = datetime.strptime(time_taken, "%H%M%S")            
+            if not print_debug:
+                if event_type == self._MOUSE:
+                    pass
+                if self.event_decider(event_type,function_key, x_pos,y_pos) : continue
+            old_time = current_step_time
+    def check_image(self):
+        pass
+    def find_image(self):
+        pass
+    def make_screenshot(self):
+        pass
