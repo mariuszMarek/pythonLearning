@@ -1,9 +1,12 @@
 import time
-from datetime        import datetime
-from pynput.mouse    import Button, Controller as Mouse_Controller
-from pynput.keyboard import Key, Controller as Keyboard_Controller
-from mouse_keybord_events import KeysDef
+import os
 
+from datetime             import datetime
+from pynput.mouse         import Button, Controller as Mouse_Controller
+from pynput.keyboard      import Key, Controller as Keyboard_Controller
+from mouse_keybord_events import KeysDef
+from root_files_to_save   import RootLocation
+from compare_screenshots  import ISL
 
 class ParsKeyboarMouse(KeysDef):
     def __init__(self, list_of_steps = []):
@@ -115,32 +118,42 @@ class ExecuteSteps(ExecuteEvents):
                 if print_debug :
                     print (delta_time.total_seconds() + self._EXTRA_TIME)
                     print (identifier)
-class Parser(ExecuteSteps):
-    def __init__(self,MakeScreenshot, list_of_steps = [], extra_time = 2):
+class Parser(ExecuteSteps, RootLocation):
+    def __init__(self,MakeScreenshot, list_of_steps = [], extra_time = 2, root_location = ".\\images", compare_engine = ISL):
         super().__init__(list_of_steps, extra_time)
-        self._ScreenshotClass = MakeScreenshot
+        self._ScreenshotClass = MakeScreenshot()
+        self._Compare_engine  = compare_engine
+        self._Screenshot_list = []
+        root_location         = self._script_location if root_location == ".\\images\\" else root_location + "\\images\\"
+        self._root_location   = str(root_location)
     def execute_steps (self, print_debug = False):
         self.format_steps(print_debug)
-        old_time           = datetime.today
-        current_step_time  = old_time
-        self.old_key       = ""        
+        old_time          = datetime.today
+        current_step_time = old_time
+        self.old_key      = ""        
         for numberOfStep in self.list_of_steps_formated:
             if print_debug : 
                 print("self.list_of_steps_formated")
                 print(self.list_of_steps_formated)
                 print("numberOfStep")
                 print(numberOfStep[0])
-            _, function_key, x_pos,y_pos, event_type, time_taken, *_  = numberOfStep[0]            
+            _, function_key, x_pos,y_pos, event_type, time_taken, *_  = numberOfStep[0]
             self.check_time(current_step_time, old_time, print_debug) # make a time before executing the next step?
-            current_step_time = datetime.strptime(time_taken, "%H%M%S")            
+            current_step_time = datetime.strptime(time_taken, "%H%M%S")
             if not print_debug:
-                if event_type == self._MOUSE:
-                    pass
+                if event_type == self._MOUSE                                : self.wait_or_proceed(numberOfStep[0])                    
                 if self.event_decider(event_type,function_key, x_pos,y_pos) : continue
             old_time = current_step_time
-    def check_image(self):
-        pass
-    def find_image(self):
-        pass
+    def wait_or_proceed(self, all_parameters):
+        needed_for_finding = all_parameters[5:9:1]
+        self.find_image(needed_for_finding)
+        self.make_screenshot()
+    def check_image(self): #to compare
+        return self._Compare_engine.load_images(self._Screenshot_list)
+    def find_image(self, list_of_parameters):
+        time_stamp, num_step,num_sequence, proc_name = list_of_parameters
+        file_loc_string = f'{self._root_location}{num_sequence}\\{num_sequence}_{num_step}_{time_stamp}_{proc_name}_screenshot.png'
+        assert os.path.isfile(file_loc_string), f"can't find the file {file_loc_string}"        
+        self._Screenshot_list.append(file_loc_string)
     def make_screenshot(self):
-        pass
+        self._Screenshot_list.append(self._ScreenshotClass.make_screenshot(save_image = 0))        
