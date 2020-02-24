@@ -13,7 +13,7 @@ class ProcessFinder(RootLocation):
         self._window_name    = win32gui.GetWindowText(self._HWND)
         self._proc_meta_data = []
         self.get_proc_meta()
-    def update_window_info(self):        
+    def update_window_info(self):
         if (win32gui.GetForegroundWindow() != self._HWND) or (self._window_rect != win32gui.GetWindowRect(self._HWND)):
             self._HWND           = win32gui.GetForegroundWindow()
             self._window_rect    = win32gui.GetWindowRect(self._HWND)
@@ -32,14 +32,14 @@ class ProcessFinder(RootLocation):
             print(error_short)
             return False
 class MakeScreenshot(ProcessFinder):
-    def __init__(self, root_location = ".\\images"):
+    def __init__(self, root_location = ".\\images\\"):
         super().__init__()
         root_location = self._script_location if root_location == ".\\images\\" else root_location + "\\images\\"
         self._imageGrab     = ImageGrab # for screenshots
         self._file_list     = []
         self._root_location = str(root_location)
     def make_screensots(self, parameters = [],save_image = 1):
-        super().update_window_info()        
+        super().update_window_info()
         if save_image == 1 : 
             time_stamp, order_num, sequence_num = parameters
             dirImage  = self._root_location + "\\{}\\".format(sequence_num)
