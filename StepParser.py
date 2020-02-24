@@ -74,43 +74,45 @@ class ExecuteEvents(FormatSteps):
             self._KEYBOARD_CONTROLLER.press(function_key)            
 
 class Parser(ExecuteEvents):
-    def __init__(self, list_of_steps = []):
+    def __init__(self, list_of_steps = [], extra_time = 2):
         super().__init__(list_of_steps)                 
         self.remove_redundancy = {}                
-        self._EXTRA_TIME       = 2
+        self._EXTRA_TIME       = extra_time
     def execute_steps (self, print_debug = False):
         self.format_steps(print_debug)
         old_time           = datetime.today
-        time_stamp         = old_time
-        old_key            = ""
-        was_control_button = False 
-        for numberOfStep in self.list_of_steps_formated:            
-            if print_debug : print("self.list_of_steps_formated")
-            if print_debug : print(self.list_of_steps_formated)            
-            if print_debug : print("numberOfStep")
-            if print_debug : print(numberOfStep[0])
-            _, function_key, x_pos,y_pos, event_type, time_taken, *_   = numberOfStep[0]            
-            current_step_time = datetime.strptime(time_taken, "%H%M%S")
-
-            if old_time != time_stamp:
-                delta_time = current_step_time - old_time
-                try:                    
-                    time.sleep(delta_time.total_seconds() + self._EXTRA_TIME)
-                except ValueError as identifier:
-                    print (numberOfStep)
+        current_step_time  = old_time
+        self.old_key       = ""
+        
+        for numberOfStep in self.list_of_steps_formated:
+            if print_debug : 
+                print("self.list_of_steps_formated")
+                print(self.list_of_steps_formated)
+                print("numberOfStep")
+                print(numberOfStep[0])
+            _, function_key, x_pos,y_pos, event_type, time_taken, *_  = numberOfStep[0]            
+            self.check_time(current_step_time, old_time, print_debug) # make a time before executing the next step?
+            current_step_time = datetime.strptime(time_taken, "%H%M%S")            
+            if not print_debug: 
+                if self.event_decider(event_type,function_key, x_pos,y_pos) : continue
+            old_time = current_step_time
+    def event_decider(self,event_type,function_key, x_pos,y_pos):
+        if event_type == self._MOUSE:
+            self.handel_mouse(x_pos,y_pos,function_key)
+        if event_type == self._KEY_PRESS:            
+            if len(function_key) > 3:
+                self.old_key            = function_key
+                self.was_control_button = True
+                return True
+            self.handel_keyboard(function_key, self.was_control_button, self.old_key)
+            self.was_control_button = False
+        return False
+    def check_time(self,current_step_time, old_time, print_debug = False):
+        if old_time != current_step_time:
+            delta_time = current_step_time - old_time
+            try:                    
+                time.sleep(delta_time.total_seconds() + self._EXTRA_TIME)
+            except ValueError as identifier:
+                if print_debug :
                     print (delta_time.total_seconds() + self._EXTRA_TIME)
-                    print (identifier)            
-            if not print_debug:
-                if event_type == self._MOUSE:
-                    self.handel_mouse(x_pos,y_pos,function_key)
-                if event_type == self._KEY_PRESS:
-                    print (x_pos + ";" + y_pos + ";" + function_key)
-                    if len(function_key) > 3:
-                        old_key = function_key
-                        was_control_button = True
-                        continue
-                    self.handel_keyboard(function_key, was_control_button, old_key)
-                    was_control_button = False
-            old_time = current_step_time    
-    
-   
+                    print (identifier)
