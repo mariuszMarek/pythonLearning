@@ -45,15 +45,15 @@ for num in for_instances:
     emulator_index    = 0
     num_of_tries      = 0
     
-    subprocess.Popen([MEMUC_EXE, "remove", "-i", "{}".format(emulator_index)]).wait()
-    subprocess.Popen([MEMUC_EXE, "create", "51"]).wait()
+    # subprocess.Popen([MEMUC_EXE, "remove", "-i", "{}".format(emulator_index)]).wait()
+    # subprocess.Popen([MEMUC_EXE, "create", "51"]).wait()
 
-    subprocess.Popen([MEMUC_EXE, "setconfig", "-i", "{}".format(emulator_index),"cpus","4"]).wait()
-    subprocess.Popen([MEMUC_EXE, "setconfig", "-i", "{}".format(emulator_index),"memory","2048"]).wait()
-    subprocess.Popen([MEMUC_EXE, "setconfig", "-i", "{}".format(emulator_index),"turbo_mode","1"]).wait()
-    subprocess.Popen([MEMUC_EXE, "setconfig", "-i", "{}".format(emulator_index),"is_customed_resolution", "1"]).wait()
-    subprocess.Popen([MEMUC_EXE, "setconfig", "-i", "{}".format(emulator_index),"resolution_width", "720"]).wait()
-    subprocess.Popen([MEMUC_EXE, "setconfig", "-i", "{}".format(emulator_index),"resolution_height", "1280"]).wait()
+    # subprocess.Popen([MEMUC_EXE, "setconfig", "-i", "{}".format(emulator_index),"cpus","4"]).wait()
+    # subprocess.Popen([MEMUC_EXE, "setconfig", "-i", "{}".format(emulator_index),"memory","2048"]).wait()
+    # subprocess.Popen([MEMUC_EXE, "setconfig", "-i", "{}".format(emulator_index),"turbo_mode","1"]).wait()
+    # subprocess.Popen([MEMUC_EXE, "setconfig", "-i", "{}".format(emulator_index),"is_customed_resolution", "1"]).wait()
+    # subprocess.Popen([MEMUC_EXE, "setconfig", "-i", "{}".format(emulator_index),"resolution_width", "720"]).wait()
+    # subprocess.Popen([MEMUC_EXE, "setconfig", "-i", "{}".format(emulator_index),"resolution_height", "1280"]).wait()
 
     subprocess.Popen([MEMUC_EXE, "start"    , "-i", "{}".format(emulator_index)]).wait() # to gowno sie cos psuje, trudno pozostaje sleep    
     Whandle = win32gui.FindWindow(None, WINDOW_NAME)
@@ -61,8 +61,8 @@ for num in for_instances:
         win32gui.SetForegroundWindow(Whandle)  # na wrazie czego, tutaj chyba trzeba try: catch jak chińskie gówno się włączy
     except :
         pass    
-    print("Wait 50 s for program to start") 
-    time.sleep(50)
+    # print("Wait 50 s for program to start") 
+    # time.sleep(50)
     winsound.Beep(frequency, duration)
     print("wczyta teraz emaila do uzycia {}".format(email_to_use))
     pyperclip.copy(email_to_use)
