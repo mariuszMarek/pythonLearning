@@ -118,15 +118,16 @@ class ExecuteSteps(ExecuteEvents):
                 if print_debug :
                     print (delta_time.total_seconds() + self._EXTRA_TIME)
                     print (identifier)
-class Parser(ExecuteSteps, RootLocation):
-    def __init__(self,MakeScreenshot, list_of_steps = [], extra_time = 2, root_location = ".\\images", compare_engine = ISL, similarity_acceptance_lvl = 1):
-        super().__init__(list_of_steps, extra_time)
+class Parser(ExecuteSteps):
+    def __init__(self, MakeScreenshot, CompareClass=ISL, compare_engine="ISL", similarity_acceptance_lvl=1,
+                 list_of_steps=[], extra_time=2, root_location=".\\images\\"):
+        super(Parser,self).__init__(list_of_steps, extra_time)
+        self._RootLocationClass         = RootLocation()
         self._ScreenshotClass           = MakeScreenshot()
-        self._Compare_engine            = compare_engine
-        self._Screenshot_list           = []
-        root_location                   = self._script_location if root_location == ".\\images\\" else root_location + "\\images\\"
-        self._root_location             = str(root_location)        
+        self._CompareImagesClass        = CompareClass()        
         self._similarity_acceptance_lvl = similarity_acceptance_lvl
+        self._Screenshot_list           = []
+        self._root_location             = str(self._RootLocationClass._script_location) + "\\images\\" if root_location == ".\\images\\" else root_location + "\\images\\"                     
     def execute_steps (self, print_debug = False, compare_method = "SSI"):
         self.format_steps(print_debug)
         old_time            = datetime.today
@@ -150,19 +151,20 @@ class Parser(ExecuteSteps, RootLocation):
         needed_for_finding = all_parameters[5:9:1]
         similarity_level   = 0
         while similarity_level < self._similarity_acceptance_lvl :
-            print (needed_for_finding) #only for dev test
+            # print (needed_for_finding) #only for dev test
             self.find_image(needed_for_finding)
             self.make_screenshot()
             similarity_level = self.check_image()
             self._Screenshot_list.clear()
-            time.sleep(1)            
+            print (f'similarity_level->{similarity_level}')
+            time.sleep(5)            
     def check_image(self): #to compare
-        self._Compare_engine.load_images(self._Screenshot_list)
-        return self._Compare_engine.get_differences(self.compare_method)
+        self._CompareImagesClass.load_images(self._Screenshot_list)
+        return self._CompareImagesClass.get_differences(self.compare_method)
     def find_image(self, list_of_parameters):
         time_stamp, num_step,num_sequence, proc_name = list_of_parameters
         file_loc_string = f'{self._root_location}{num_sequence}\\{num_sequence}_{num_step}_{time_stamp}_{proc_name}_screenshot.png'
         assert os.path.isfile(file_loc_string), f"can't find the file {file_loc_string}"        
         self._Screenshot_list.append(file_loc_string)
     def make_screenshot(self):
-        self._Screenshot_list.append(self._ScreenshotClass.make_screenshot(save_image = 0))
+        self._Screenshot_list.append(self._ScreenshotClass.make_screensots(save_image = 0))

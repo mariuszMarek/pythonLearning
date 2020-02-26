@@ -63,11 +63,14 @@ for num in for_instances:
         subprocess.Popen(
             [MEMUC_EXE, "start", "-i", "{}".format(emulator_index)]).wait()
         Whandle = win32gui.FindWindow(None, WINDOW_NAME)
-        # na wrazie czego, tutaj chyba trzeba try: catch jak chińskie gówno się włączy
-        win32gui.SetForegroundWindow(Whandle)
-        print("Wait 50s for program to start")
-        time.sleep(50)
+        # na wrazie czego, tutaj chyba trzeba try: catch jak chińskie gówno się włączy         
+    try:
+        win32gui.SetForegroundWindow(Whandle)  # na wrazie czego, tutaj chyba trzeba try: catch jak chińskie gówno się włączy
+    except :
+        pass  
+        # print("Wait 50s for program to start")
     # odczytuje od ostatniego pliku
+    time.sleep(50)
     if test: print(Steps_to_do)
     for sequences in reversed(Steps_to_do):
         if test: print("sequences")
@@ -75,8 +78,9 @@ for num in for_instances:
         if test: print("Steps_to_do[sequences]") 
         if test:
             print(Steps_to_do[sequences]) if LOAD_ALL else print(Steps_to_do)
-        if LOAD_ALL: konkretne_kroki = Parser(Steps_to_do[sequences]) 
-        else:        konkretne_kroki = Parser(Steps_to_do)
+        if LOAD_ALL: konkretne_kroki = Parser(MakeScreenshot,list_of_steps=Steps_to_do[sequences], compare_engine="ISL", similarity_acceptance_lvl=0.91) 
+        else:        konkretne_kroki = Parser(MakeScreenshot,list_of_steps=Steps_to_do, compare_engine="ISL", similarity_acceptance_lvl=0.91)
+        # def __init__(self,MakeScreenshot, list_of_steps = [], extra_time = 2, root_location = ".\\images", compare_engine = ISL, similarity_acceptance_lvl = 1):
 
         if sequences == "0":
             if test: print(email_to_use)

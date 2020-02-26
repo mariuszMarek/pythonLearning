@@ -45,15 +45,15 @@ for num in for_instances:
     emulator_index    = 0
     num_of_tries      = 0
     
-    # subprocess.Popen([MEMUC_EXE, "remove", "-i", "{}".format(emulator_index)]).wait()
-    # subprocess.Popen([MEMUC_EXE, "create", "51"]).wait()
+    subprocess.Popen([MEMUC_EXE, "remove", "-i", "{}".format(emulator_index)]).wait()
+    subprocess.Popen([MEMUC_EXE, "create", "51"]).wait()
 
-    # subprocess.Popen([MEMUC_EXE, "setconfig", "-i", "{}".format(emulator_index),"cpus","4"]).wait()
-    # subprocess.Popen([MEMUC_EXE, "setconfig", "-i", "{}".format(emulator_index),"memory","2048"]).wait()
-    # subprocess.Popen([MEMUC_EXE, "setconfig", "-i", "{}".format(emulator_index),"turbo_mode","1"]).wait()
-    # subprocess.Popen([MEMUC_EXE, "setconfig", "-i", "{}".format(emulator_index),"is_customed_resolution", "1"]).wait()
-    # subprocess.Popen([MEMUC_EXE, "setconfig", "-i", "{}".format(emulator_index),"resolution_width", "720"]).wait()
-    # subprocess.Popen([MEMUC_EXE, "setconfig", "-i", "{}".format(emulator_index),"resolution_height", "1280"]).wait()
+    subprocess.Popen([MEMUC_EXE, "setconfig", "-i", "{}".format(emulator_index),"cpus","4"]).wait()
+    subprocess.Popen([MEMUC_EXE, "setconfig", "-i", "{}".format(emulator_index),"memory","2048"]).wait()
+    subprocess.Popen([MEMUC_EXE, "setconfig", "-i", "{}".format(emulator_index),"turbo_mode","1"]).wait()
+    subprocess.Popen([MEMUC_EXE, "setconfig", "-i", "{}".format(emulator_index),"is_customed_resolution", "1"]).wait()
+    subprocess.Popen([MEMUC_EXE, "setconfig", "-i", "{}".format(emulator_index),"resolution_width", "720"]).wait()
+    subprocess.Popen([MEMUC_EXE, "setconfig", "-i", "{}".format(emulator_index),"resolution_height", "1280"]).wait()
 
     subprocess.Popen([MEMUC_EXE, "start"    , "-i", "{}".format(emulator_index)]).wait() # to gowno sie cos psuje, trudno pozostaje sleep    
     Whandle = win32gui.FindWindow(None, WINDOW_NAME)
@@ -116,7 +116,12 @@ for num in for_instances:
     
 
 
-subprocess.Popen([MEMUC_EXE, "stop", "-i", "{}".format(emulator_index)]).wait()    
+subprocess.Popen([MEMUC_EXE, "stop", "-i", "{}".format(emulator_index)]).wait()
+try:
+    subprocess.Popen([MEMUC_EXE, "remove", "-i", "{}".format(emulator_index)]).wait()
+finally:
+    subprocess.Popen([MEMUC_EXE, "remove", "-i", "{}".format(emulator_index)]).wait()
+
 with open(LIST_OF_EMAILS, 'w') as exit_file:
     for index, lines in enumerate(lines_of_emails):
          if index >= NUM_OF_INSTACE: exit_file.write(lines)
